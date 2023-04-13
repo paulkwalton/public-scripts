@@ -141,6 +141,16 @@ for port in $TCP_PORTS; do
         wpscan --url "https://$TARGET_IP:$port/"
       fi
       ;;
+      513)
+      # Rlogin
+      echo "Rlogin detected. Enumerating..."
+      nmap -p$port --script rlogin-brute -n "$TARGET_IP"
+      
+      if $ENABLE_BRUTE_FORCE; then
+        echo "Brute forcing Rlogin..."
+        hydra -t 4 -L /usr/share/wordlists/top100.txt -P /usr/share/wordlists/top100.txt -f -v -e nsr -s $port "$TARGET_IP" rlogin
+      fi
+      ;;  
     631)
       # CUPS
       echo "CUPS detected. Enumerating..."
