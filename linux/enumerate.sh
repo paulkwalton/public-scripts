@@ -86,6 +86,16 @@ for port in $TCP_PORTS; do
         wpscan --url "http://$TARGET_IP:$port/"
       fi
       ;;
+      88)
+      # Kerberos
+      echo "Kerberos detected. Enumerating..."
+      nmap -p$port --script krb5-enum-users,krb5-security-level -n "$TARGET_IP"
+      
+      if $ENABLE_BRUTE_FORCE; then
+        echo "Brute forcing Kerberos..."
+        hydra -t 4 -L /usr/share/wordlists/top100.txt -P /usr/share/wordlists/top100.txt -f -v -e nsr -s $port "$TARGET_IP" krb5
+      fi
+      ;;
     110)
       # POP3
       echo "POP3 detected. Enumerating..."
