@@ -21,7 +21,7 @@ sudo rm /tmp/windapsearch-auth-unconstrained-users.txt
 sudo rm /tmp/windapsearch-auth-unconstrained-computers.txt
 
 #Run LDAP Query WITHOUT Credentials and dump all users
-/tmp/windapsearch -d $domain --dc $ip -m users | grep cn: | cut -d " " -f 2 /tmp/windapsearch-noauth-allusers.txt
+/tmp/windapsearch -d $domain --dc $ip -m users | grep cn: | cut -d " " -f 2 > /tmp/windapsearch-noauth-allusers.txt
 
 #Run LDAP Query WITH Credentials and dump all users
 /tmp/windapsearch -d $domain --dc $ip -u $username -p $password -m users | grep cn: | cut -d " " -f 2 > /tmp/windapsearch-auth-allusers.txt
