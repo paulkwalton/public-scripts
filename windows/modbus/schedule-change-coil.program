@@ -1,3 +1,11 @@
+
+/*
+ * This script is a simple implementation of a Modbus TCP client that writes a single coil value
+ * to a Modbus slave device at regular intervals. It uses the NModbus library to establish a connection
+ * and send Modbus commands to the target device. The target device's IP address, port, unit number,
+ * and coil address are all configurable, as well as the write interval.
+ */
+ 
 using System;
 using System.Net;
 using System.Net.Sockets;
