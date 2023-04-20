@@ -1,0 +1,44 @@
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using NModbus;
+
+namespace ModbusWriteCoil
+{
+    class Program
+    {
+        private static string rhost = "192.168.80.138";
+        private static int rport = 502;
+        private static byte unitNumber = 1;
+        private static ushort dataAddress = 0;
+        private static bool data = false;
+        private static int interval = 30000;
+
+        static void Main(string[] args)
+        {
+            using (TcpClient client = new TcpClient())
+            {
+                client.Connect(IPAddress.Parse(rhost), rport);
+                var factory = new ModbusFactory();
+                IModbusMaster master = factory.CreateMaster(client);
+
+                while (true)
+                {
+                    try
+                    {
+                        master.WriteSingleCoil(unitNumber, dataAddress, data);
+                        Console.WriteLine("Successfully wrote coil.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error writing coil: {ex.Message}");
+                    }
+
+                    Thread.Sleep(interval);
+                }
+            }
+        }
+    }
+}
+
