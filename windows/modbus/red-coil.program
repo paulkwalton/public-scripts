@@ -1,0 +1,66 @@
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using NModbus;
+
+/*
+ * This script is a simple implementation of a Modbus TCP client that reads a single coil value
+ * from a Modbus slave device every 10 seconds and displays it. It uses the NModbus library to establish a connection
+ * and send Modbus commands to the target device. The target device's IP address, port, unit number,
+ * and coil address are all configurable.
+ */
+
+namespace ModbusReadCoil
+{
+    class Program
+    {
+        // Remote host IP address
+        private static string rhost = "192.168.80.138";
+        // Remote host port
+        private static int rport = 502;
+        // Modbus unit number
+        private static byte unitNumber = 1;
+        // Address of the coil to read
+        private static ushort dataAddress = 0;
+        // Read interval (10 seconds)
+        private static int interval = 10000;
+
+        static void Main(string[] args)
+        {
+            // Create a new TCP client
+            using (TcpClient client = new TcpClient())
+            {
+                // Connect to the remote host
+                client.Connect(IPAddress.Parse(rhost), rport);
+
+                // Create a Modbus factory
+                var factory = new ModbusFactory();
+
+                // Create a Modbus master using the TCP client
+                IModbusMaster master = factory.CreateMaster(client);
+
+                // Continuously read and display the coil value every 10 seconds
+                while (true)
+                {
+                    try
+                    {
+                        // Read the coil value
+                        bool[] coilValues = master.ReadCoils(unitNumber, dataAddress, 1);
+
+                        // Display the coil value
+                        Console.WriteLine($"Coil value at address {dataAddress}: {coilValues[0]}");
+                    }
+                    catch (Exception ex)
+                    {
+                        // Display any errors that occur while reading the coil
+                        Console.WriteLine($"Error reading coil: {ex.Message}");
+                    }
+
+                    // Wait for 10 seconds before the next read
+                    Thread.Sleep(interval);
+                }
+            }
+        }
+    }
+}
