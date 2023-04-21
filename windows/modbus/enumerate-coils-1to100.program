@@ -1,0 +1,125 @@
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using NModbus;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+
+namespace ModbusEnumerateCoils
+{
+    class Program
+    {
+        // Remote host IP address
+        private static string rhost = "192.168.80.138";
+        // Remote host port
+        private static int rport = 502;
+        // Modbus unit number
+        private static byte unitNumber = 1;
+        // Starting address for coil enumeration
+        private static ushort startAddress = 0;
+        // Ending address for coil enumeration
+        private static ushort endAddress = 100;
+        // Delay between coil checks (1 second)
+        private static int delay = 1000;
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool SetConsoleMode(IntPtr hConsoleHandle, int mode);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool GetConsoleMode(IntPtr hConsoleHandle, out int mode);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern IntPtr GetStdHandle(int handle);
+
+        private const int STD_OUTPUT_HANDLE = -11;
+        private const int ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004;
+
+        static void Main(string[] args)
+        {
+            // Print the script introduction
+            Console.WriteLine("This script continuously enumerates the coils of a Modbus device and checks for changes in their values.");
+            Console.WriteLine("If a coil's value has changed since the last scan, it will be highlighted in red.");
+            Console.WriteLine("Press Ctrl+C to stop the script.\n");
+
+
+            // Enable console virtual terminal processing for colored output
+            var iStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+            if (!GetConsoleMode(iStdOut, out int outConsoleMode))
+            {
+                Console.WriteLine("Failed to get console mode");
+                return;
+            }
+
+            outConsoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            if (!SetConsoleMode(iStdOut, outConsoleMode))
+            {
+                Console.WriteLine("Failed to set console mode");
+                return;
+            }
+
+            // Create a new TCP client
+            using (TcpClient client = new TcpClient())
+            {
+                // Connect to the remote host
+                client.Connect(IPAddress.Parse(rhost), rport);
+
+                // Create a Modbus factory
+                var factory = new ModbusFactory();
+
+                // Create a Modbus master using the TCP client
+                IModbusMaster master = factory.CreateMaster(client);
+
+                // Initialize a dictionary to store the previous coil values
+                Dictionary<ushort, bool> previousCoilValues = new Dictionary<ushort, bool>();
+
+                // Continuously enumerate coils
+                while (true)
+                {
+                    for (ushort address = startAddress; address <= endAddress; address++)
+                    {
+                        try
+                        {
+                            // Read the coil value at the current address
+                            bool[] coilValues = master.ReadCoils(unitNumber, address, 1);
+
+                            // Check if the coil value has changed since the last scan
+                            bool changed = previousCoilValues.TryGetValue(address, out bool previousValue) &&
+                                           previousValue != coilValues[0];
+
+                            // Display the coil value and address
+                            if (changed)
+                            {
+                                // Highlight the changed coil value in red
+                                Console.ForegroundColor = ConsoleColor.Red;
+                            }
+
+                            Console.WriteLine($"Coil value at address {address}: {coilValues[0]}");
+
+                            // Reset the console text color
+                            Console.ResetColor();
+
+                            // Store the current coil value for the next iteration
+                            previousCoilValues[address] = coilValues[0];
+                        }
+                        catch (Exception ex)
+                        {
+                            // Display any errors that occur while reading the coil
+                            Console.WriteLine($"Error reading coil at address {address}: {ex.Message}");
+                        }
+
+                        // Wait for 1 second before the next coil check
+
+                        Thread.Sleep(delay);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
