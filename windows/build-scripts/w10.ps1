@@ -34,6 +34,8 @@ cd c:\tools\spiderfoot
 pip install -r requirements.txt
 Write-Output "Download Github Tooling"
 git clone https://github.com/PowerShellMafia/PowerSploit.git c:\tools\powersploit
+git clone https://github.com/carlospolop/PEASS-ng.git c:\tools\linux\peass-ng
+git clone https://github.com/rebootuser/LinEnum.git c:\tools\linux\linenum
 git clone https://github.com/dafthack/MailSniper.git c:\tools\mailsniper
 git clone https://github.com/dafthack/DomainPasswordSpray.git c:\tools\domainpasswordspray
 git clone https://github.com/Kevin-Robertson/Inveigh.git c:\tools\inveigh
