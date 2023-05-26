@@ -188,6 +188,7 @@ pip3 install python-libpcap
 sudo dpkg -i mysql-apt-config_0.5.3-1_all.deb
 sudo apt update -y
 sudo apt install mysql-workbench-community -y
+sudo apt install sshpass -y
 sudo git clone https://github.com/CISOfy/lynis.git /opt/lynis
 sudo apt install eyewitness -y
 sudo apt install hping3 -y
