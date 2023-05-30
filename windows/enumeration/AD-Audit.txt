@@ -1,0 +1,47 @@
+
+
+1. **Patch Applications:** Verify the patch status of all applications within the AD environment. Use vulnerability scanning tools to identify unpatched or out-of-date software.
+
+2. **Patch Operating Systems:** Verify the patch status of all operating systems. Use OS fingerprinting and vulnerability scanning tools to identify any unpatched or vulnerable systems.
+
+3. **Antivirus and Antimalware Deployment:** Confirm that antivirus and antimalware software is installed, properly configured, and up to date on all systems. Test for any possible ways to remove or disable these protections.
+
+4. **Monitor Sensitive AD Objects:** Test the monitoring capabilities of sensitive AD objects by attempting to make modifications. Validate the logging and alerting mechanisms for any such attempts.
+
+5. **Protect Sensitive User Accounts:** Attempt to gain unauthorized access to accounts with access to sensitive data. Confirm that adequate monitoring is in place for such accounts.
+
+6. **Restrict Powerful Accounts:** Test if powerful accounts can be used on unauthorized systems. Attempt to use such accounts to elevate privileges or perform unauthorized actions.
+
+7. **Privileged Groups Membership:** Confirm that permanent membership in highly privileged groups is eliminated. Try to add a test account to such groups and monitor the reaction.
+
+8. **Temporary Membership Controls:** Test the implementation of controls that grant temporary membership in privileged groups. Verify the efficiency of these controls and that memberships are properly revoked.
+
+9. **Secure Administrative Hosts:** Attempt to compromise secure administrative hosts to test their security configurations and resistance to attack.
+
+10. **Application Allowlists:** Check if application allowlists are properly implemented on domain controllers, administrative hosts, and sensitive systems. Attempt to run unauthorized applications to test these controls.
+
+11. **Critical Assets Identification:** Identify critical assets and verify that they are properly secured and monitored.
+
+12. **Least-Privilege Access Controls:** Test for least-privilege, role-based access controls within the directory, its infrastructure, and domain-joined systems. Try to perform actions beyond the privilege levels to test these controls.
+
+13. **Legacy Systems Isolation:** Verify if legacy systems and applications are properly isolated. Attempt to compromise these systems to test their isolation.
+
+14. **Decommissioning Legacy Systems:** Confirm that legacy systems and applications are properly decommissioned and can't be exploited.
+
+15. **Secure Development Lifecycle Programs:** Review the implementation of secure development lifecycle programs for custom applications. Look for potential security vulnerabilities in these applications.
+
+16. **Configuration Management:** Review the configuration management processes and compliance. Test whether security settings are properly updated with new hardware or software versions.
+
+17. **Migration to Pristine Forests:** Verify that critical assets have been migrated to pristine forests with stringent security and monitoring requirements.
+
+18. **User Security Simplification:** Evaluate how security measures have been simplified for end users and ensure that it does not introduce any vulnerabilities.
+
+19. **Host-Based Firewalls:** Test host-based firewalls to control and secure communications. Attempt to bypass these controls to assess their effectiveness.
+
+20. **Device Patching:** Check the patch status of all devices. Use vulnerability scanning tools to identify unpatched or vulnerable devices.
+
+21. **IT Asset Lifecycle Management:** Review the implementation of business-centric lifecycle management for IT assets. Ensure that security is incorporated into each stage of the lifecycle.
+
+22. **Incident Recovery Plans:** Review existing incident recovery plans and simulate an incident to test their effectiveness.
+   
+Remember, the above plan should be performed by experienced testers under strict ethical guidelines with appropriate permissions.
