@@ -10,17 +10,18 @@ if (!(Get-Module -ListAvailable -Name ActiveDirectory)) {
 Import-Module ActiveDirectory
 
 # Banner for Domain and Forest Functional Level
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Retrieving Domain and Forest Functional Level...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 # Get Domain Functional Level
 $domain = Get-ADDomain
-Write-Output "Domain Functional Level is $($domain.DomainMode)"
+Write-Host "Domain Functional Level is $($domain.DomainMode)" -ForegroundColor Yellow
 
 # Get Forest Functional Level
 $forest = Get-ADForest
-Write-Output "Forest Functional Level is $($forest.ForestMode)"
+Write-Host "Forest Functional Level is $($forest.ForestMode)" -ForegroundColor Yellow
+
 
 Write-Host "`n======================================" -ForegroundColor Green
 Write-Host "  Checking Active Directory Trusts...  " -ForegroundColor White
@@ -29,14 +30,20 @@ Write-Host "======================================`n" -ForegroundColor Green
 # Get all trusts
 $trusts = Get-ADTrust -Filter *
 
-# Output the trusts
-foreach ($trust in $trusts) {
-    Write-Output ("Trust Name: {0}, Trust Direction: {1}, Trust Type: {2}" -f $trust.Name, $trust.TrustDirection, $trust.TrustType)
+# Check if trusts exist
+if($trusts) {
+    # Output the trusts
+    foreach ($trust in $trusts) {
+        Write-Host ("Trust Name: {0}, Trust Direction: {1}, Trust Type: {2}" -f $trust.Name, $trust.TrustDirection, $trust.TrustType) -ForegroundColor Yellow
+    }
+} else {
+    Write-Host "No Active Directory trusts found." -ForegroundColor Yellow
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Retrieving Domain Controller OS versions...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get all Domain Controllers using Get-ADComputer cmdlet
@@ -44,12 +51,12 @@ $domainControllers = Get-ADComputer -Filter {OperatingSystem -like "*Windows Ser
 
 foreach ($dc in $domainControllers) {
     # Output the OS information for each Domain Controller
-    Write-Output "Domain Controller $($dc.Name) is running $($dc.OperatingSystem) version $($dc.OperatingSystemVersion)"
+    Write-Host "Domain Controller $($dc.Name) is running $($dc.OperatingSystem) version $($dc.OperatingSystemVersion)" -ForegroundColor Yellow
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Retrieving Computer OS versions...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Define a list of obsolete operating systems
@@ -61,36 +68,36 @@ $computers = Get-ADComputer -Filter * -Property OperatingSystem, OperatingSystem
 foreach ($computer in $computers) {
     # Check if the computer's operating system is in the list of obsolete operating systems
     if ($computer.OperatingSystem -in $obsoleteOperatingSystems) {
-        Write-Output "Computer $($computer.Name) is running an obsolete OS: $($computer.OperatingSystem) version $($computer.OperatingSystemVersion)"
+        Write-Host "Computer $($computer.Name) is running an obsolete OS: $($computer.OperatingSystem) version $($computer.OperatingSystemVersion)" -ForegroundColor Red
     } else {
-        Write-Output "Computer $($computer.Name) is running $($computer.OperatingSystem) version $($computer.OperatingSystemVersion)"
+        Write-Host "Computer $($computer.Name) is running $($computer.OperatingSystem) version $($computer.OperatingSystemVersion)" -ForegroundColor Yellow
     }
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Retrieving Domain and Enterprise Administrators...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get Domain Administrators
 $domainAdmins = Get-ADGroupMember -Identity "Domain Admins" -Recursive
-Write-Output "`nDomain Administrators:"
+Write-Host "Domain Administrators:" -ForegroundColor Yellow
 foreach ($admin in $domainAdmins) {
     Write-Output "$($admin.samaccountname)"
 }
-Write-Output "`nTotal number of Domain Administrators: $($domainAdmins.Count)"
+Write-Host "Total number of Domain Administrators: $($domainAdmins.Count)" -ForegroundColor Yellow
 
 # Get Enterprise Administrators
 $enterpriseAdmins = Get-ADGroupMember -Identity "Enterprise Admins" -Recursive
-Write-Output "`nEnterprise Administrators:"
+Write-Output "Enterprise Administrators:"
 foreach ($admin in $enterpriseAdmins) {
     Write-Output "$($admin.samaccountname)"
 }
-Write-Output "`nTotal number of Enterprise Administrators: $($enterpriseAdmins.Count)"
+Write-Host "Total number of Enterprise Administrators: $($enterpriseAdmins.Count)" -ForegroundColor Yellow
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking Schema Admins Group...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get the 'Schema Admins' group
@@ -100,37 +107,48 @@ $schemaAdminsGroup = Get-ADGroup -Identity "Schema Admins"
 $schemaAdmins = Get-ADGroupMember -Identity $schemaAdminsGroup
 
 if ($schemaAdmins) {
-    Write-Output "WARNING: 'Schema Admins' group is not empty. Current members:"
+    Write-Host "WARNING: 'Schema Admins' group is not empty. Current members:" -ForegroundColor Red
     foreach ($admin in $schemaAdmins) {
-        Write-Output ("Name: {0}, SID: {1}" -f $admin.Name, $admin.SID)
+        Write-Host ("Name: {0}, SID: {1}" -f $admin.Name, $admin.SID) -ForegroundColor Yellow
     }
 } else {
     Write-Output "'Schema Admins' group is empty."
 }
 
 
-Write-Host "`n======================================" -ForegroundColor Green
-Write-Host "  Checking All Users and Groups with 'admin' in Name...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
+Write-Host "  Checking All Users and Groups with admin' in Name...  " -ForegroundColor White
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get all user accounts with 'admin' in the name
-Get-ADUser -Filter { Name -like '*admin*' } | Select-Object Name, SamAccountName
+$adminUsers = Get-ADUser -Filter { Name -like '*admin*' } | Select-Object Name, SamAccountName
 
 # Get all groups with 'admin' in the name
-Get-ADGroup -Filter { Name -like '*admin*' } | Select-Object Name
+$adminGroups = Get-ADGroup -Filter { Name -like '*admin*' } | Select-Object Name
+
+# Print the results
+Write-Host "`nUsers with 'admin' in name:" -ForegroundColor Yellow
+$adminUsers | ForEach-Object { Write-Host $_.Name }
+
+Write-Host "`nGroups with 'admin' in name:" -ForegroundColor Yellow
+$adminGroups | ForEach-Object { Write-Host $_.Name }
 
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking if all privileged accounts are in the 'Protected Users' group...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get Protected Users
 $protectedUsers = Get-ADGroupMember -Identity "Protected Users" -Recursive
+Write-Host "`nProtected Users:" -ForegroundColor Yellow
+$protectedUsers | ForEach-Object { Write-Host $_.Name }
 
 # Check Domain Administrators
-Write-Output "`nChecking Domain Administrators:"
+Write-Host "======================================" -ForegroundColor Green
+Write-Host "  Checking if Domain Admin accounts are in the 'Protected Users' group...  " -ForegroundColor White
+Write-Host "======================================" -ForegroundColor Green
 foreach ($admin in $domainAdmins) {
     if ($admin.SamAccountName -notin $protectedUsers.SamAccountName) {
         Write-Output "Domain Administrator $($admin.SamAccountName) is not in the 'Protected Users' group"
@@ -138,18 +156,19 @@ foreach ($admin in $domainAdmins) {
 }
 
 # Check Enterprise Administrators
-Write-Output "`nChecking Enterprise Administrators:"
+Write-Host "======================================" -ForegroundColor Green
+Write-Host "  Checking if Enterprise Admin accounts are in the 'Protected Users' group...  " -ForegroundColor White
+Write-Host "======================================" -ForegroundColor Green
 foreach ($admin in $enterpriseAdmins) {
     if ($admin.SamAccountName -notin $protectedUsers.SamAccountName) {
         Write-Output "Enterprise Administrator $($admin.SamAccountName) is not in the 'Protected Users' group"
     }
 }
 
-
 # Banner for AS-REP Roasting
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking for users vulnerable to AS-REP Roasting...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get all users with the 'DONT_REQUIRE_PREAUTH' flag set
@@ -157,12 +176,12 @@ $asrepUsers = Get-ADUser -Filter 'UserAccountControl -band 4194304' -Properties 
 
 # Output the users vulnerable to AS-REP Roasting
 foreach ($user in $asrepUsers) {
-    Write-Output "User $($user.samaccountname) is vulnerable to AS-REP Roasting"
+    Write-Host "User $($user.samaccountname) is vulnerable to AS-REP Roasting" -ForegroundColor Red
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking for potential Kerberoastable users...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get all users with a set Service Principal Name
@@ -170,12 +189,12 @@ $kerberoastUsers = Get-ADUser -Filter {ServicePrincipalName -like "*"} -Properti
 
 # Output the Kerberoastable users
 foreach ($user in $kerberoastUsers) {
-    Write-Output "User $($user.samaccountname) may be Kerberoastable"
+    Write-Host "User $($user.samaccountname) may be Kerberoastable" -ForegroundColor Red
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking for users with 'Password Never Expires' set...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get all users with 'Password Never Expires' flag set
@@ -183,14 +202,14 @@ $passwordNeverExpiresUsers = Get-ADUser -Filter {PasswordNeverExpires -eq $true}
 
 # Output the users with 'Password Never Expires' set
 foreach ($user in $passwordNeverExpiresUsers) {
-    Write-Output "User $($user.samaccountname) has 'Password Never Expires' set"
+    Write-Host "User $($user.samaccountname) has 'Password Never Expires' set" -ForegroundColor Red
 }
 
 
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking for inactive users (90 days without login)...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get date for 90 days ago
@@ -204,9 +223,9 @@ foreach ($user in $inactiveUsers) {
     Write-Output "User $($user.samaccountname) has been inactive since $($user.LastLogonDate)"
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking for disabled users...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get all disabled users
@@ -217,27 +236,27 @@ foreach ($user in $disabledUsers) {
     Write-Output "User $($user.samaccountname) is disabled"
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking for locked out users...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 # Get Locked Out Users
 $lockedOutUsers = Search-ADAccount -LockedOut
-Write-Output "`nLocked Out Users:"
+Write-Output "Locked Out Users:"
 foreach ($user in $lockedOutUsers) {
     Write-Output "$($user.samaccountname)"
 }
-Write-Output "`nTotal number of Locked Out Users: $($lockedOutUsers.Count)"
+Write-Output "Total number of Locked Out Users: $($lockedOutUsers.Count)"
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Users created in the last 7 days  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 Get-ADUser -Filter {whenCreated -ge ((Get-Date).AddDays(-7)).Date}
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking for users with reversible password encryption enabled...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get all users with the 'PASSWORD_REVERSIBLE' flag set
@@ -245,12 +264,12 @@ $reversiblePasswordUsers = Get-ADUser -Filter 'UserAccountControl -band 128' -Pr
 
 # Output the users with reversible password encryption enabled
 foreach ($user in $reversiblePasswordUsers) {
-    Write-Output "User $($user.samaccountname) has reversible password encryption enabled"
+    Write-Host "User $($user.samaccountname) has reversible password encryption enabled" -ForegroundColor Red
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking for users with 'No Password Required' flag set...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get all users with the 'PASSWD_NOTREQD' flag set
@@ -258,12 +277,12 @@ $noPasswordRequiredUsers = Get-ADUser -Filter 'UserAccountControl -band 32' -Pro
 
 # Output the users with 'No Password Required' flag set
 foreach ($user in $noPasswordRequiredUsers) {
-    Write-Output "User $($user.samaccountname) has 'No Password Required' flag set"
+    Write-Host "User $($user.samaccountname) has 'No Password Required' flag set" -ForegroundColor Red
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking Password Policy...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get the Default Domain Password Policy
@@ -291,40 +310,48 @@ if ($passwordPolicy.MaxPasswordAge -eq "-1") {
     Write-Output "The Password Policy requires passwords to be changed every $maxPasswordAgeDays days."
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking Service Accounts Operating As User Accounts...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get users with "service" or "svc" in the name and when their password was last changed
 Get-ADUser -Filter {(Name -like "*service*") -or (Name -like "*svc*")} -Properties PasswordLastSet | Select-Object Name, PasswordLastSet
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
+Write-Host "  Checking Backup Accounts...  " -ForegroundColor White
+Write-Host "======================================" -ForegroundColor Green
+
+
+# Get users with "backup" or "bkp" in the name and when their password was last changed
+Get-ADUser -Filter {(Name -like "*backup*") -or (Name -like "*bkp*")} -Properties PasswordLastSet | Select-Object Name, PasswordLastSet
+
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking All Accounts With Admin Bit Set...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get all accounts with admincount attribute set
 Get-ADUser -Filter {AdminCount -eq 1} -Properties PasswordLastSet, AdminCount | Select-Object Name, PasswordLastSet, AdminCount
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking Domain Controllers support NTLMv1 and LM  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get all accounts with NTLMv1 and old LM protocols enabled
 Get-ADDomainController | ForEach-Object {Get-SmbServerConfiguration -CimSession $_.Name} | Select-Object PSComputerName, EnableSMB1Protocol, EnableSMB2Protocol
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking Domain Controllers support SMBv1  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 # Check if domain controllers support SMBv1
 Get-WmiObject Win32_ServerFeature | Where-Object {$_.Name -eq "SMB1Protocol"} | Select-Object Name, DisplayName, InstalledState
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking All Administrator Accounts Which Can Be Delegated...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get the 'Administrators' group
@@ -349,9 +376,9 @@ foreach ($account in $adminAccounts) {
 }
 
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking All User Accounts for Possible Test Accounts...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Specify the words to look for in account names
@@ -370,9 +397,9 @@ foreach ($account in $allAccounts) {
     }
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking All OUs for Delegations to 'Everyone' or 'Authenticated Users'...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get all OUs
@@ -390,9 +417,9 @@ foreach ($OU in $OUs) {
     }
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking krbtgt Password Last Set...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get the krbtgt account
@@ -411,9 +438,9 @@ if ($monthsSinceLastSet -gt 6) {
     Write-Output ("krbtgt password was last set on {0}." -f $krbtgt.PasswordLastSet)
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking Anonymous LDAP...  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get the RootDSE information for the current domain
@@ -431,32 +458,32 @@ if ($domainPolicy.dSHeuristics -eq $null) {
     Write-Output "WARNING: Anonymous LDAP is ENABLED."
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking Windows 2000 Preauth Accounts (everyone or anonymous is bad)  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 Get-ADGroupMember -Identity "CN=Pre-Windows 2000 Compatible Access,CN=Builtin,$((Get-ADDomain).DistinguishedName)" | Get-ADUser -Server $((Get-ADDomain).DnsRoot) | Select-Object Name,SamAccountName | Sort-Object Name
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  DNSAdmins Abuse.  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 Get-ADGroupMember -Identity DNSAdmins | Select-Object Name,SamAccountName | Sort-Object Name
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Backup Operator Abuse.  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 Get-ADGroupMember -Identity "Backup Operators" | Select-Object Name,SamAccountName | Sort-Object Name
 
 Get-ADObject -filter { (UserAccountControl -BAND 0x0080000) -OR (UserAccountControl -BAND 0x1000000) -OR (msDS-AllowedToDelegateTo -like '*') } -prop Name,ObjectClass,PrimaryGroupID,UserAccountControl,ServicePrincipalName,msDS-AllowedToDelegateTo
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Has AD Administrator Account Been Renamed  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 $Domain = Get-ADDomain
@@ -474,9 +501,9 @@ if ($AdminAccount.SamAccountName -eq "Administrator") {
     Write-Output "The AD administrator account has been renamed to $($AdminAccount.SamAccountName)."
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Has LAPS been enforced  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 # Get all computer objects
 $Computers = Get-ADComputer -Filter * -Properties ms-Mcs-AdmPwdExpirationTime
@@ -490,9 +517,9 @@ foreach ($Computer in $Computers) {
     }
 }
 
-Write-Host "`n======================================" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Has Recycle Bin Been Enabled  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
+Write-Host "======================================" -ForegroundColor Green
 
 
 # Get the current forest
@@ -507,31 +534,27 @@ if ($recycleBin.EnabledScopes -contains $forest.ForestMode) {
 } else {
     Write-Output "The AD Recycle Bin is not enabled."
 
-    # Import the module if not already loaded
-if (!(Get-Module -Name GroupPolicy)) {
-    Import-Module GroupPolicy
+$scriptTitle = "SQL Server Enumeration via Active Directory PowerShell"
+Write-Host "======================================" -ForegroundColor Green
+Write-Host "  $scriptTitle  " -ForegroundColor White
+Write-Host "======================================" -ForegroundColor Green
+
+# Find all SQL Servers registered in AD
+$sqlServers = Get-ADObject -Filter 'objectClass -eq "serviceConnectionPoint"' -Property keywords |
+    Where-Object { $_.keywords -like "*MSSQL*" } |
+    ForEach-Object { $_.DistinguishedName }
+
+# Check if any SQL servers were found
+if ($sqlServers) {
+    Write-Host "SQL Servers found:" -ForegroundColor Yellow
+    Write-Host ($sqlServers -join "")
+} else {
+    Write-Host "No SQL Servers found." -ForegroundColor Red
 }
 
 
-# Import the module if not already loaded
-if (!(Get-Module -Name GroupPolicy)) {
-    Import-Module GroupPolicy
-}
-
-Write-Host "`n======================================" -ForegroundColor Green
-Write-Host "  Export All GPO To Desktop  " -ForegroundColor White
-Write-Host "======================================`n" -ForegroundColor Green
 
 
-# Get all GPOs
-$allGPOs = Get-GPO -All
-
-# Output GPO reports
-foreach ($gpo in $allGPOs) {
-    $report = Get-GPOReport -Guid $gpo.Id -ReportType Html
-    $filePath = Join-Path -Path $env:USERPROFILE -ChildPath ("Desktop\{0}.html" -f $gpo.DisplayName)
-    $report | Out-File -FilePath $filePath
-}
 
 }
 
