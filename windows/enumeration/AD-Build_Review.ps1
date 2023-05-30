@@ -186,6 +186,8 @@ foreach ($user in $passwordNeverExpiresUsers) {
     Write-Output "User $($user.samaccountname) has 'Password Never Expires' set"
 }
 
+
+
 # Banner for inactive users
 Write-Output "`n===================================="
 Write-Output "Checking for inactive users (90 days without login)..."
@@ -214,6 +216,7 @@ $disabledUsers = Get-ADUser -Filter {Enabled -eq $false} -Properties Enabled, sa
 foreach ($user in $disabledUsers) {
     Write-Output "User $($user.samaccountname) is disabled"
 }
+
 
 # Banner for users with reversible password encryption
 Write-Output "`n===================================="
@@ -336,7 +339,7 @@ Write-Output "Checking All User Accounts for Possible Test Accounts..."
 Write-Output "====================================`n"
 
 # Specify the words to look for in account names
-$words = 'test', 'dev', 'demo', 'dummy', 'sandbox', 'delete', 'trial', 'bloggs', 'doe'
+$words = 'test', 'dev', 'demo', 'dummy', 'sandbox', 'delete', 'trial', 'bloggs', 'doe', 'old', 'remove'
 
 # Get all user accounts
 $allAccounts = Get-ADUser -Filter * -Properties SamAccountName
@@ -392,11 +395,42 @@ if ($monthsSinceLastSet -gt 6) {
     Write-Output ("krbtgt password was last set on {0}." -f $krbtgt.PasswordLastSet)
 }
 
+# Banner for checking Anonymous LDAP
+Write-Output "`n===================================="
+Write-Output "Checking Anonymous LDAP..."
+Write-Output "====================================`n"
+
+# Get the RootDSE information for the current domain
+$rootDSE = Get-ADRootDSE
+
+# Get the domain policy object
+$domainPolicy = Get-ADObject -Identity ($rootDSE.defaultNamingContext) -Properties dSHeuristics
+
+# Check the dSHeuristics attribute
+if ($domainPolicy.dSHeuristics -eq $null) {
+    Write-Output "Anonymous LDAP is DISABLED."
+} elseif ($domainPolicy.dSHeuristics.Substring(0,1) -eq "2") {
+    Write-Output "Anonymous LDAP is DISABLED."
+} else {
+    Write-Output "WARNING: Anonymous LDAP is ENABLED."
+}
 
 
+Write-Output "`n===================================="
+Write-Output "Checking Windows 2000 Preauth Accounts (everyone or anonymous is bad)"
+Write-Output "====================================`n"
 
+Get-ADGroupMember -Identity "CN=Pre-Windows 2000 Compatible Access,CN=Builtin,$((Get-ADDomain).DistinguishedName)" | Get-ADUser -Server $((Get-ADDomain).DnsRoot) | Select-Object Name,SamAccountName | Sort-Object Name
 
+Write-Output "`n===================================="
+Write-Output "DNSAdmins Abuse."
+Write-Output "====================================`n"
 
+Get-ADGroupMember -Identity DNSAdmins | Select-Object Name,SamAccountName | Sort-Object Name
 
+Write-Output "`n===================================="
+Write-Output "Backup Operator Abuse."
+Write-Output "====================================`n"
 
+Get-ADGroupMember -Identity "Backup Operators" | Select-Object Name,SamAccountName | Sort-Object Name
 
