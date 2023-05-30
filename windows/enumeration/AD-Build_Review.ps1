@@ -21,6 +21,20 @@ Write-Output "Domain Functional Level is $($domain.DomainMode)"
 $forest = Get-ADForest
 Write-Output "Forest Functional Level is $($forest.ForestMode)"
 
+# Banner for checking Trusts
+Write-Output "`n===================================="
+Write-Output "Checking Active Directory Trusts..."
+Write-Output "====================================`n"
+
+# Get all trusts
+$trusts = Get-ADTrust -Filter *
+
+# Output the trusts
+foreach ($trust in $trusts) {
+    Write-Output ("Trust Name: {0}, Trust Direction: {1}, Trust Type: {2}" -f $trust.Name, $trust.TrustDirection, $trust.TrustType)
+}
+
+
 # Banner for Domain Controller OS versions
 Write-Output "`n===================================="
 Write-Output "Retrieving Domain Controller OS versions..."
@@ -74,6 +88,39 @@ foreach ($admin in $enterpriseAdmins) {
     Write-Output "$($admin.samaccountname)"
 }
 Write-Output "`nTotal number of Enterprise Administrators: $($enterpriseAdmins.Count)"
+
+# Banner for checking Schema Admins Group
+Write-Output "`n===================================="
+Write-Output "Checking Schema Admins Group..."
+Write-Output "====================================`n"
+
+# Get the 'Schema Admins' group
+$schemaAdminsGroup = Get-ADGroup -Identity "Schema Admins"
+
+# Get the members of the 'Schema Admins' group
+$schemaAdmins = Get-ADGroupMember -Identity $schemaAdminsGroup
+
+if ($schemaAdmins) {
+    Write-Output "WARNING: 'Schema Admins' group is not empty. Current members:"
+    foreach ($admin in $schemaAdmins) {
+        Write-Output ("Name: {0}, SID: {1}" -f $admin.Name, $admin.SID)
+    }
+} else {
+    Write-Output "'Schema Admins' group is empty."
+}
+
+
+# Banner for checking Admin Accounts and Groups
+Write-Output "`n===================================="
+Write-Output "Checking All Users and Groups with 'admin' in Name..."
+Write-Output "====================================`n"
+
+# Get all user accounts with 'admin' in the name
+Get-ADUser -Filter { Name -like '*admin*' } | Select-Object Name, SamAccountName
+
+# Get all groups with 'admin' in the name
+Get-ADGroup -Filter { Name -like '*admin*' } | Select-Object Name
+
 
 # Banner for checking Protected Users
 Write-Output "`n===================================="
@@ -303,6 +350,50 @@ foreach ($account in $allAccounts) {
         }
     }
 }
+
+# Banner for checking OU Delegations
+Write-Output "`n===================================="
+Write-Output "Checking All OUs for Delegations to 'Everyone' or 'Authenticated Users'..."
+Write-Output "====================================`n"
+
+# Get all OUs
+$OUs = Get-ADOrganizationalUnit -Filter * -Properties nTSecurityDescriptor
+
+foreach ($OU in $OUs) {
+    # Get the ACL for the OU
+    $acl = Get-Acl -Path ("AD:\" + $OU.DistinguishedName)
+
+    # Check if there is any Access Rule for 'Everyone' or 'Authenticated Users'
+    foreach ($accessRule in $acl.Access) {
+        if ($accessRule.IdentityReference.Value -eq "Everyone" -or $accessRule.IdentityReference.Value -eq "NT AUTHORITY\Authenticated Users") {
+            Write-Output ("WARNING: OU '{0}' has delegation for '{1}'" -f $OU.Name, $accessRule.IdentityReference.Value)
+        }
+    }
+}
+
+# Banner for checking krbtgt password
+Write-Output "`n===================================="
+Write-Output "Checking krbtgt Password Last Set..."
+Write-Output "====================================`n"
+
+# Get the krbtgt account
+$krbtgt = Get-ADUser -Identity "krbtgt" -Properties PasswordLastSet
+
+# Get the current date
+$now = Get-Date
+
+# Calculate the time since the password was last set
+$monthsSinceLastSet = (($now - $krbtgt.PasswordLastSet).Days) / 30
+
+# Check if the password was last set more than 6 months ago
+if ($monthsSinceLastSet -gt 6) {
+    Write-Output ("WARNING: krbtgt password was last set on {0}, which is more than 6 months ago." -f $krbtgt.PasswordLastSet)
+} else {
+    Write-Output ("krbtgt password was last set on {0}." -f $krbtgt.PasswordLastSet)
+}
+
+
+
 
 
 
