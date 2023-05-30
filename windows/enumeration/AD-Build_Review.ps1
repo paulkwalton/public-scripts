@@ -75,4 +75,16 @@ foreach ($user in $disabledUsers) {
     Write-Output "User $($user.samaccountname) is disabled"
 }
 
-# Banner for users with reversible password
+# Banner for users with reversible password encryption
+Write-Output "`n===================================="
+Write-Output "Checking for users with reversible password encryption enabled..."
+Write-Output "====================================`n"
+
+# Get all users with the 'PASSWORD_REVERSIBLE' flag set
+$reversiblePasswordUsers = Get-ADUser -Filter 'UserAccountControl -band 128' -Properties userAccountControl, samaccountname
+
+# Output the users with reversible password encryption enabled
+foreach ($user in $reversiblePasswordUsers) {
+    Write-Output "User $($user.samaccountname) has reversible password encryption enabled"
+}
+
