@@ -552,7 +552,22 @@ if ($sqlServers) {
     Write-Host "No SQL Servers found." -ForegroundColor Red
 }
 
+$scriptTitle = "Active Directory Group Enumeration for Domain Users"
+Write-Host "======================================" -ForegroundColor Green
+Write-Host "  $scriptTitle  " -ForegroundColor White
+Write-Host "======================================" -ForegroundColor Green
 
+# Define user to look for
+$user = "Domain Users"
+
+# Get the user's memberOf property and find out groups 
+$groups = (Get-ADUser -Identity $user -Properties MemberOf).MemberOf
+
+# Output each group that the user is a member of
+$groups | ForEach-Object {
+    $groupInfo = Get-ADGroup -Identity $_
+    Write-Host "Group Name: $($groupInfo.Name)" -ForegroundColor Yellow
+}
 
 
 
