@@ -1,21 +1,19 @@
 Write-Output @"
 ============================================================
-Welcome to the BloodHound File Execution and Archiving Script!
+Welcome to the File Execution and Archiving Script!
 
 This PowerShell script does the following:
 
-1. Prompts you for the location of the BloodHound executable (.exe) file.
-2. Checks if the file exists.
-3. Asks for your desired output directory.
-4. Checks if the output directory exists.
-5. Generates a timestamp, which is used to name the output zip file.
-6. Creates a 10-character alphanumeric password randomly.
-7. Runs the BloodHound exe file with specific parameters including the generated zip file name and password.
-8. Outputs the randomly generated password for your zip file.
+1. Opens a dialog box prompting you to select an executable (.exe) file.
+2. Checks if the selected file exists.
+3. Sets the output directory to your Documents folder.
+4. Generates a timestamp, which is used to name the output subdirectory.
+5. Creates a new subdirectory in your Documents folder with the timestamp in its name.
+6. Runs the exe file with specific parameters, using the timestamped subdirectory as the output location.
 
 Key Features:
-- BloodHound is run in Stealth mode. This is designed to minimize the amount of noise generated in logs, making it less likely to trigger alerts.
-- BloodHound is also run in DC Only mode. This means that it will only collect information about Domain Controllers, reducing the amount of data collected and processed.
+- The exe is run in Stealth mode. This is designed to minimize the amount of noise generated in logs, making it less likely to trigger alerts.
+- The exe is also run in DC Only mode. This means that it will only collect information about Domain Controllers, reducing the amount of data collected and processed.
 
 These features make the tool more efficient and stealthy, enabling it to operate without attracting unnecessary attention.
 
@@ -23,6 +21,7 @@ Please follow the prompts and provide accurate information when requested.
 Let's get started!
 ============================================================
 "@
+
 # Add assembly for creating Windows Forms
 Add-Type -AssemblyName System.Windows.Forms
 
