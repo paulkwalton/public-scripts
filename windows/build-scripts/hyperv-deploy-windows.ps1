@@ -41,8 +41,21 @@ Stop-VM -Name $VMName -Force
 # Enable nested virtualization
 Set-VMProcessor -VMName $VMName -ExposeVirtualizationExtensions $true
 
+# Create a key protector for the VM
+$owner = Get-HgsGuardian -Name "UntrustedGuardian"
+$kp = New-HgsKeyProtector -Owner $owner -AllowUntrustedRoot
+
+# Apply the key protector to the VM
+Set-VMKeyProtector -VMName $VMName -KeyProtector $kp.RawData
+
+# Enable TPM for the VM
+Enable-VMTPM -VMName $VMName
+
 # Enable Guest Services
 Enable-VMIntegrationService -VMName $VMName -Name 'Guest Service Interface'
+
+# Enable TPM
+Enable-VMTPM -VMName $VMName
 
 # Mount the ISO to the VM
 Add-VMDvdDrive -VMName $VMName -Path $InstallMediaPath
@@ -53,3 +66,5 @@ Set-VMFirmware -VMName $VMName -FirstBootDevice $DVDDrive
 
 # Start the VM
 Start-VM -Name $VMName
+
+
