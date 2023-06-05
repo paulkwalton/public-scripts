@@ -76,7 +76,7 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 # Restart Windows & rename Windows
 Write-Output "Rename & Reboot Windows"
 Rename-Computer -NewName "WinTak"
-# Install WSL2 and Kali Linux
+
 # Create the directory if it does not exist
 if (!(Test-Path -Path "C:\temp\")) {
     New-Item -ItemType Directory -Force -Path "C:\temp\"
@@ -88,18 +88,14 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 # Enable Virtual Machine Platform
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 
-# Download and install the Linux kernel update package
-$kernelUpdateUrl = "https://aka.ms/wsl2kernel"
-$kernelUpdateFile = "C:\temp\wsl2kernel.msi"
-Invoke-WebRequest -Uri $kernelUpdateUrl -OutFile $kernelUpdateFile
-Start-Process -FilePath $kernelUpdateFile -Wait
+# Create a Scheduled Task to run post-restart-script.ps1 after the computer restarts
+$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument " -ExecutionPolicy Bypass -File 'C:\temp\PostRestartScript.ps1'"
+$trigger = New-ScheduledTaskTrigger -AtStartup
+Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "PostRestartScript" -Description "Script to run after restart" -User "SYSTEM"
 
-# Set WSL 2 as your default version
-wsl --set-default-version 2
+# Restart the computer
+Restart-Computer
 
-# Install Kali Linux
-Invoke-WebRequest -Uri https://aka.ms/wsl-kali-linux-new -OutFile C:\temp\KaliLinux.appx -UseBasicParsing
-Add-AppxPackage -Path C:\temp\KaliLinux.appx
 
 Restart-Computer
 
