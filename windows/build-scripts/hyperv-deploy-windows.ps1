@@ -41,6 +41,9 @@ Stop-VM -Name $VMName -Force
 # Enable nested virtualization
 Set-VMProcessor -VMName $VMName -ExposeVirtualizationExtensions $true
 
+# Enable Guest Services
+Enable-VMIntegrationService -VMName $VMName -Name 'Guest Service Interface'
+
 # Mount the ISO to the VM
 Add-VMDvdDrive -VMName $VMName -Path $InstallMediaPath
 
@@ -50,6 +53,3 @@ Set-VMFirmware -VMName $VMName -FirstBootDevice $DVDDrive
 
 # Start the VM
 Start-VM -Name $VMName
-
-# Open VM console
-Start-Process "vmconnect.exe" "$HVHost $VMName"
