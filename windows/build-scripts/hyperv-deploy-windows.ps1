@@ -1,6 +1,6 @@
 # Define Variables
-$VMName = 'Windows11VM-Wintak'
-$Switch = 'External Virtual Switch' 
+$VMName = 'Windows11VM'
+$Switch = 'default Switch' 
 $InstallMediaPath = 'E:\ISO\windows11.iso'
 $VHDPath = "E:\Hyper-V\$VMName\Virtual Hard Disks\$VMName.vhdx"
 $VMMemory = 8GB
@@ -17,11 +17,17 @@ if (Get-VM -Name $VMName -ErrorAction SilentlyContinue) {
 # Create a new folder for the VM
 New-Item -Path "E:\Hyper-V\$VMName\Virtual Hard Disks\" -ItemType Directory -Force
 
+# Check if the VHD file already exists
+if (Test-Path $VHDPath) {
+    # Delete the VHD file
+    Remove-Item -Path $VHDPath -Force
+}
+
 # Create a new Virtual Hard Disk
 New-VHD -Path $VHDPath -Dynamic -SizeBytes 256GB
 
 # Create the Virtual Machine
-New-VM -Name $VMName -MemoryStartupBytes $VMMemory -SwitchName $Switch -VHDPath $VHDPath -Generation 2 -Path "E:\Hyper-V\$VMName\" -NoVHD
+New-VM -Name $VMName -MemoryStartupBytes $VMMemory -SwitchName $Switch -VHDPath $VHDPath -Generation 2 -Path "E:\Hyper-V\$VMName\"
 
 # Set the VM to use Dynamic Memory
 Set-VMMemory -VMName $VMName -DynamicMemoryEnabled $true
@@ -38,5 +44,12 @@ Set-VMProcessor -VMName $VMName -ExposeVirtualizationExtensions $true
 # Mount the ISO to the VM
 Add-VMDvdDrive -VMName $VMName -Path $InstallMediaPath
 
+# Set CD as highest boot order
+$DVDDrive = Get-VMDvdDrive -VMName $VMName
+Set-VMFirmware -VMName $VMName -FirstBootDevice $DVDDrive
+
 # Start the VM
 Start-VM -Name $VMName
+
+# Open VM console
+Start-Process "vmconnect.exe" "$HVHost $VMName"
