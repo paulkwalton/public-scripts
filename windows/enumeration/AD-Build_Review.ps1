@@ -602,6 +602,20 @@ foreach ($user in $users) {
     }
 }
 
+$scriptTitle = "Active Directory Enumeration for ms-DS-MachineAccountQuota"
+Write-Host "======================================" -ForegroundColor Green
+Write-Host "  $scriptTitle  " -ForegroundColor White
+Write-Host "======================================" -ForegroundColor Green
+
+# Get the domain
+$domain = Get-ADDomain
+
+# Get the ms-DS-MachineAccountQuota attribute
+$machineAccountQuota = $domain | Select-Object -ExpandProperty "ms-DS-MachineAccountQuota"
+
+# Print the ms-DS-MachineAccountQuota value
+Write-Host "The ms-DS-MachineAccountQuota for the domain is: $machineAccountQuota" -ForegroundColor Yellow
+
 
 
 
