@@ -28,6 +28,7 @@ choco install keepassx -y
 choco install angryip -y
 choco install vlc -y
 choco install teamviewer -y
+choco install openvpn-connect -y
 #Clone Tools From Github
 Write-Output "Download & Install Spiderfoot"
 git clone https://github.com/smicallef/spiderfoot.git c:\tools\spiderfoot
