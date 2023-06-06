@@ -75,7 +75,7 @@ git clone https://github.com/skahwah/SQLRecon.git c:\tools\sqlrecon
 git clone https://github.com/GhostPack/SafetyKatz.git c:\tools\safetykatz
 # Disable Windows Firewalls and AV
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
-Set-MpPreference -DisableRealtimeMonitoring $true
+Add-MpPreference -ExclusionPath "C:\tools\"
 
 # Restart Windows & rename Windows
 Write-Output "Rename & Reboot Windows"
