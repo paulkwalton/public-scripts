@@ -29,6 +29,9 @@ choco install angryip -y
 choco install vlc -y
 choco install teamviewer -y
 choco install openvpn-connect -y
+# Disable Windows Firewalls and AV
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+Add-MpPreference -ExclusionPath "C:\tools\"
 #Clone Tools From Github
 Write-Output "Download & Install Spiderfoot"
 git clone https://github.com/smicallef/spiderfoot.git c:\tools\spiderfoot
@@ -73,9 +76,7 @@ git clone https://github.com/haseebT/mRemoteNG-Decrypt.git c:\tools\mRemoteNG-De
 git clone https://github.com/mgeeky/PackMyPayload.git c:\tools\packmypayload
 git clone https://github.com/skahwah/SQLRecon.git c:\tools\sqlrecon
 git clone https://github.com/GhostPack/SafetyKatz.git c:\tools\safetykatz
-# Disable Windows Firewalls and AV
-Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
-Add-MpPreference -ExclusionPath "C:\tools\"
+
 
 # Restart Windows & rename Windows
 Write-Output "Rename & Reboot Windows"
