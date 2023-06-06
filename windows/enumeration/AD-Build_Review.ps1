@@ -607,14 +607,14 @@ Write-Host "======================================" -ForegroundColor Green
 Write-Host "  $scriptTitle  " -ForegroundColor White
 Write-Host "======================================" -ForegroundColor Green
 
-# Get the domain
-$domain = Get-ADDomain
+# Get the domain DN (Distinguished Name)
+$domainDN = (Get-ADDomain).DistinguishedName
 
-# Get the ms-DS-MachineAccountQuota attribute
-$machineAccountQuota = $domain | Select-Object -ExpandProperty "ms-DS-MachineAccountQuota"
+# Get the domain root object
+$domainRoot = Get-ADObject -Identity $domainDN -Properties "ms-DS-MachineAccountQuota"
 
 # Print the ms-DS-MachineAccountQuota value
-Write-Host "The ms-DS-MachineAccountQuota for the domain is: $machineAccountQuota" -ForegroundColor Yellow
+Write-Host "The ms-DS-MachineAccountQuota for the domain is: $($domainRoot.'ms-DS-MachineAccountQuota')" -ForegroundColor Yellow
 
 
 
