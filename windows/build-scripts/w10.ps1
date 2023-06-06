@@ -113,6 +113,9 @@ Invoke-WebRequest -Uri $KaliLinuxUrl -OutFile $KaliLinuxFile -UseBasicParsing -T
 # Install Kali Linux
 Add-AppxPackage $KaliLinuxFile
 
+# Start Kali Linux instance and run 'apt update'
+wsl -d kali-linux -u root -- apt update -y
+
 # Self-deleting
 $MyPath = $MyInvocation.MyCommand.Path
 $DeleteScriptBlock = { param($path) Start-Sleep -Seconds 2; Remove-Item -Path $path }
