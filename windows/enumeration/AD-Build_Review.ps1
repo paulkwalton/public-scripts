@@ -569,6 +569,39 @@ $memberOf | ForEach-Object {
     Write-Host "Group Name: $($groupInfo.Name)" -ForegroundColor Yellow
 }
 
+$scriptTitle = "Active Directory User Enumeration for UnixUserPassword, unicodePwd, and msSFU30Password Attributes"
+Write-Host "======================================" -ForegroundColor Green
+Write-Host "  $scriptTitle  " -ForegroundColor White
+Write-Host "======================================" -ForegroundColor Green
+
+# Import the module
+Import-Module ActiveDirectory
+
+# Get all AD users
+$users = Get-ADUser -Filter * -Property *
+
+# Loop through users and check for UnixUserPassword, unicodePwd, and msSFU30Password
+foreach ($user in $users) {
+    # Get the UnixUserPassword, unicodePwd, and msSFU30Password attributes
+    # Note: Reading unicodePwd directly is disallowed due to security reasons. It will always return null.
+    $unixUserPassword = $user | Get-ADUser -Property UnixUserPassword
+    $unicodePwd = $user | Get-ADUser -Property unicodePwd
+    $msSFU30Password = $user | Get-ADUser -Property msSFU30Password
+    
+    # If the UnixUserPassword, unicodePwd, or msSFU30Password attributes are set, print the username
+    if ($unixUserPassword.UnixUserPassword) {
+        Write-Host "User $($user.SamAccountName) has UnixUserPassword set" -ForegroundColor Yellow
+    }
+
+    if ($unicodePwd.unicodePwd) {
+        Write-Host "User $($user.SamAccountName) has unicodePwd set (note: this value is not readable)" -ForegroundColor Yellow
+    }
+
+    if ($msSFU30Password.msSFU30Password) {
+        Write-Host "User $($user.SamAccountName) has msSFU30Password set" -ForegroundColor Yellow
+    }
+}
+
 
 
 
