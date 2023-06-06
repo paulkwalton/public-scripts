@@ -84,43 +84,36 @@ if (!(Test-Path -Path "C:\temp\")) {
     New-Item -ItemType Directory -Force -Path "C:\temp\"
 }
 
-# Create the directory if it does not exist
-if (!(Test-Path -Path "C:\temp\")) {
-    New-Item -ItemType Directory -Force -Path "C:\temp\"
-}
-
 # Enable Windows Subsystem for Linux (WSL)
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 
 # Enable Virtual Machine Platform
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 
-# Create PostRestartScript.ps1 content
-# Download and install the Linux kernel update package
-$kernelUpdateUrl = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
-$kernelUpdateFile = "C:\temp\wsl_update_x64.msi"
-Invoke-WebRequest -Uri $kernelUpdateUrl -OutFile $kernelUpdateFile
-Start-Process -FilePath $kernelUpdateFile -Wait
-
 # Set WSL 2 as your default version
 wsl --set-default-version 2
 
 # Download Kali Linux
 $KaliLinuxUrl = "https://aka.ms/wsl-kali-linux-new"
-$KaliLinuxFile = ".\kali-linux.AppxBundle"
+$KaliLinuxFile = "C:\temp\kali-linux.AppxBundle"
 Invoke-WebRequest -Uri $KaliLinuxUrl -OutFile $KaliLinuxFile -UseBasicParsing -TimeoutSec 1800
 
 # Install Kali Linux
-Add-AppxPackage $KaliLinuxFile
-
-# Start Kali Linux instance and run 'apt update'
-wsl -d kali-linux -u root -- apt update -y
+Add-AppxPackage -Path $KaliLinuxFile
 
 # Self-deleting
 $MyPath = $MyInvocation.MyCommand.Path
 $DeleteScriptBlock = { param($path) Start-Sleep -Seconds 2; Remove-Item -Path $path }
 Start-Job -ScriptBlock $DeleteScriptBlock -ArgumentList $MyPath
 
+# Define the PostRestartScript content
+$PostRestartScriptContent = @"
+# Download and install the Linux kernel update package
+`$kernelUpdateUrl = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
+`$kernelUpdateFile = "C:\temp\wsl_update_x64.msi"
+Invoke-WebRequest -Uri `$kernelUpdateUrl -OutFile `$kernelUpdateFile
+Start-Process -FilePath `$kernelUpdateFile -Wait
+"@
 
 # Create PostRestartScript.ps1
 $PostRestartScriptContent | Out-File -FilePath 'C:\temp\PostRestartScript.ps1'
@@ -130,8 +123,3 @@ Copy-Item -Path 'C:\temp\PostRestartScript.ps1' -Destination "$([Environment]::G
 
 # Restart the computer
 Restart-Computer
-
-
-
-
-
