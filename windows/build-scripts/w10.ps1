@@ -2,6 +2,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 # Remove all the Windows Bloatware
 mkdir c:\tools
 # Install Tools Via Choc
+choco install git.install -y
 choco install bginfo -y
 choco install adobereader -y
 choco install googlechrome -y
