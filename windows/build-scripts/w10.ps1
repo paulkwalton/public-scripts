@@ -73,8 +73,10 @@ git clone https://github.com/haseebT/mRemoteNG-Decrypt.git c:\tools\mRemoteNG-De
 git clone https://github.com/mgeeky/PackMyPayload.git c:\tools\packmypayload
 git clone https://github.com/skahwah/SQLRecon.git c:\tools\sqlrecon
 git clone https://github.com/GhostPack/SafetyKatz.git c:\tools\safetykatz
-# Disable Windows Firewalls
+# Disable Windows Firewalls and AV
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+Set-MpPreference -DisableRealtimeMonitoring $true
+
 # Restart Windows & rename Windows
 Write-Output "Rename & Reboot Windows"
 Rename-Computer -NewName "WinTak"
