@@ -76,6 +76,7 @@ git clone https://github.com/haseebT/mRemoteNG-Decrypt.git c:\tools\mRemoteNG-De
 git clone https://github.com/mgeeky/PackMyPayload.git c:\tools\packmypayload
 git clone https://github.com/skahwah/SQLRecon.git c:\tools\sqlrecon
 git clone https://github.com/GhostPack/SafetyKatz.git c:\tools\safetykatz
+git clone https://github.com/paulkwalton/public-scripts.git c:\tools\public-scripts
 
 
 # Restart Windows & rename Windows
