@@ -2,6 +2,10 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 # Remove Windows Bloatware
 Get-AppxPackage * | Remove-AppxPackage
+# Disable RDP
+Set-ItemProperty -Path ‘HKLM:\System\CurrentControlSet\Control\Terminal Server’-name “fDenyTSConnections” -Value 1
+# Enable Bitlocker Disk Encryption on laptop
+manage-bde -on C: -recoverypassword
 mkdir c:\tools
 # Install Tools Via Choc
 choco install git.install -y
