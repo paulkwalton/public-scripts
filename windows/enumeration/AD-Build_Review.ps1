@@ -271,6 +271,28 @@ Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking for users with 'No Password Required' flag set...  " -ForegroundColor White
 Write-Host "======================================" -ForegroundColor Green
 
+# Define the duration in days (12 months roughly equals 365 days)
+$duration = 365
+
+# Get the current date
+$currentDate = Get-Date
+
+# Calculate the threshold date
+$thresholdDate = $currentDate.AddDays(-$duration)
+
+Write-Host "======================================" -ForegroundColor Green
+Write-Host "  Checking for users who haven't changed their password in 12 months...  " -ForegroundColor White
+Write-Host "======================================" -ForegroundColor Green
+
+# Extract users
+$users = Get-ADUser -Filter * -Property PasswordLastSet, Enabled | Where-Object {
+    ($_.PasswordLastSet -le $thresholdDate) -and ($_.Enabled -eq $true)
+} | Select-Object Name, PasswordLastSet, Enabled
+
+# Print users
+foreach ($user in $users) {
+    Write-Host ("Name: " + $user.Name + ", Last Password Change: " + $user.PasswordLastSet + ", Enabled: " + $user.Enabled) -ForegroundColor Yellow
+}
 
 # Get all users with the 'PASSWD_NOTREQD' flag set
 $noPasswordRequiredUsers = Get-ADUser -Filter 'UserAccountControl -band 32' -Properties userAccountControl, samaccountname
