@@ -1,5 +1,7 @@
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-# Remove all the Windows Bloatware
+
+# Remove Windows Bloatware
+Get-AppxPackage * | Remove-AppxPackage
 mkdir c:\tools
 # Install Tools Via Choc
 choco install git.install -y
