@@ -12,6 +12,7 @@ choco install git.install -y
 choco install citrix-receiver -y
 choco install fiddler -y
 choco install openoffice -y
+choco install burp-suite-pro-edition -y
 choco install bginfo -y
 choco install adobereader -y
 choco install googlechrome -y
