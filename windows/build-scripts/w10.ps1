@@ -23,7 +23,6 @@ choco install vnc-viewer -y
 choco install -y keepass.install
 choco install -y postman
 choco install -y sql-server-management-studio
-choco install -y tor-browser
 choco install rsat -y
 choco install python -y
 choco install golang -y
