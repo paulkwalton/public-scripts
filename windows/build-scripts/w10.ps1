@@ -4,6 +4,7 @@ mkdir c:\tools
 # Install Tools Via Choc
 choco install git.install -y
 choco install citrix-receiver -y
+choco install openoffice -y
 choco install bginfo -y
 choco install adobereader -y
 choco install googlechrome -y
