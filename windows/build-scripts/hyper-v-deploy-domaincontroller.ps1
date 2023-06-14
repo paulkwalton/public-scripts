@@ -1,10 +1,10 @@
 # Define Variables
-$VMName = 'Windows10VM'
+$VMName = 'WindowsDC01'
 $Switch = 'default Switch' 
-$InstallMediaPath = "C:\Users\$env:USERNAME\OneDrive\Documents\ISO\windows10.iso"
+$InstallMediaPath = "C:\Users\$env:USERNAME\OneDrive\Documents\ISO\server2012.iso"
 $VHDPath = "C:\Users\$env:USERNAME\Documents\Hyper-V\$VMName\Virtual Hard Disks\$VMName.vhdx"
-$VMMemory = 8GB
-$VMProcessorCount = 12
+$VMMemory = 4GB
+$VMProcessorCount = 4
 
 # Check if the VM already exists
 if (Get-VM -Name $VMName -ErrorAction SilentlyContinue) {
