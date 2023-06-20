@@ -207,20 +207,20 @@ foreach ($user in $passwordNeverExpiresUsers) {
 
 
 Write-Host "======================================" -ForegroundColor Green
-Write-Host "  Checking for inactive users (90 days without login)...  " -ForegroundColor White
+Write-Host "  Checking for inactive users (180 days without login)...  " -ForegroundColor White
 Write-Host "======================================" -ForegroundColor Green
 
+# Get date for 180 days ago
+$dateCutoff = (Get-Date).AddDays(-180)
 
-# Get date for 90 days ago
-$dateCutoff = (Get-Date).AddDays(-90)
-
-# Get all users that have not logged in for 90 days
-$inactiveUsers = Get-ADUser -Filter {LastLogonDate -lt $dateCutoff} -Properties LastLogonDate, samaccountname
+# Get all users that have not logged in for 180 days and are enabled
+$inactiveUsers = Get-ADUser -Filter {LastLogonDate -lt $dateCutoff -and Enabled -eq $true} -Properties LastLogonDate, samaccountname, Enabled
 
 # Output the inactive users
 foreach ($user in $inactiveUsers) {
-    Write-Output "User $($user.samaccountname) has been inactive since $($user.LastLogonDate)"
+    Write-Output "Active user $($user.samaccountname) has been inactive since $($user.LastLogonDate)"
 }
+
 
 Write-Host "======================================" -ForegroundColor Green
 Write-Host "  Checking for disabled users...  " -ForegroundColor White
