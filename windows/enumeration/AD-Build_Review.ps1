@@ -636,9 +636,18 @@ $domainRoot = Get-ADObject -Identity $domainDN -Properties "ms-DS-MachineAccount
 
 # Print the ms-DS-MachineAccountQuota value
 Write-Host "The ms-DS-MachineAccountQuota for the domain is: $($domainRoot.'ms-DS-MachineAccountQuota')" -ForegroundColor Yellow
-
-
-
-
 }
+
+Write-Host "======================================" -ForegroundColor Green
+Write-Host "  Checking for computers Trusted for Delegation and part of Domain Computers group...  " -ForegroundColor White
+Write-Host "======================================" -ForegroundColor Green
+
+# Get all computers with 'Trusted for Delegation' set and are part of Domain Computers group
+$trustedComputers = Get-ADComputer -Filter {TrustedForDelegation -eq $true -and primarygroupid -eq 515} -Properties trustedfordelegation,serviceprincipalname,description
+
+# Output the computers
+foreach ($computer in $trustedComputers) {
+    Write-Host "Computer $($computer.Name) is Trusted for Delegation and is part of Domain Computers group" -ForegroundColor Red
+}
+
 
