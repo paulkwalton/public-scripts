@@ -193,16 +193,15 @@ foreach ($user in $kerberoastUsers) {
 }
 
 Write-Host "======================================" -ForegroundColor Green
-Write-Host "  Checking for users with 'Password Never Expires' set...  " -ForegroundColor White
+Write-Host "  Checking for active users with 'Password Never Expires and is active' set...  " -ForegroundColor White
 Write-Host "======================================" -ForegroundColor Green
 
-
-# Get all users with 'Password Never Expires' flag set
-$passwordNeverExpiresUsers = Get-ADUser -Filter {PasswordNeverExpires -eq $true} -Properties PasswordNeverExpires, samaccountname
+# Get all active users with 'Password Never Expires' flag set
+$passwordNeverExpiresUsers = Get-ADUser -Filter {PasswordNeverExpires -eq $true -and Enabled -eq $true} -Properties PasswordNeverExpires, samaccountname, Enabled
 
 # Output the users with 'Password Never Expires' set
 foreach ($user in $passwordNeverExpiresUsers) {
-    Write-Host "User $($user.samaccountname) has 'Password Never Expires' set" -ForegroundColor Red
+    Write-Host "Active user $($user.samaccountname) has 'Password Never Expires' set" -ForegroundColor Red
 }
 
 
