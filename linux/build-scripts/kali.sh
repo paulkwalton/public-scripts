@@ -177,6 +177,7 @@ sudo apt install psql -y
 sudo apt install neo4j -y
 sudo apt install gobuster -y
 sudo apt install auditd audispd-plugins -y
+sudo apt install -y kali-win-kex
 sudo pip install mitm6
 sudo pip install pyftpdlib
 apt install golang-go -y
