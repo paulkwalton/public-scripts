@@ -136,5 +136,7 @@ $PostRestartScriptContent | Out-File -FilePath 'C:\temp\PostRestartScript.ps1'
 # Copy the PostRestartScript.ps1 to the Desktop
 Copy-Item -Path 'C:\temp\PostRestartScript.ps1' -Destination "$([Environment]::GetFolderPath('Desktop'))\RunMeAfterReboot.ps1"
 
+wsl --set-version kali-linux 2
+
 # Restart the computer
 Restart-Computer
