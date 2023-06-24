@@ -1,7 +1,5 @@
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-# Remove Windows Bloatware
-Get-AppxPackage * | Remove-AppxPackage
 # Disable RDP
 Set-ItemProperty -Path ‘HKLM:\System\CurrentControlSet\Control\Terminal Server’-name “fDenyTSConnections” -Value 1
 # Enable Bitlocker Disk Encryption on laptop
@@ -107,15 +105,6 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 
 # Set WSL 2 as your default version
 wsl --set-default-version 2
-
-# Download Kali Linux
-$KaliLinuxUrl = "https://aka.ms/wsl-kali-linux-new"
-$KaliLinuxFile = "C:\temp\kali-linux.AppxBundle"
-Invoke-WebRequest -Uri $KaliLinuxUrl -OutFile $KaliLinuxFile -UseBasicParsing -TimeoutSec 1800
-
-# Install Kali Linux
-wsl --set-default-version 2
-Add-AppxPackage -Path $KaliLinuxFile
 
 # Self-deleting
 $MyPath = $MyInvocation.MyCommand.Path
