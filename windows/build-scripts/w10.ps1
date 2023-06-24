@@ -16,12 +16,14 @@ choco install citrix-receiver -y
 choco install fiddler -y
 choco install openoffice -y
 choco install burp-suite-pro-edition -y
+choco install zap -y
 choco install bginfo -y
 choco install adobereader -y
 choco install googlechrome -y
 choco install firefox -y
 choco install notepadplusplus.install -y
 choco install 7zip.install -y
+choco install winrar -y
 choco install sysinternals -y
 choco install putty.install -y
 choco install filezilla -y
@@ -41,6 +43,8 @@ choco install angryip -y
 choco install vlc -y
 choco install teamviewer -y
 choco install openvpn-connect -y
+choco install silverlight -y
+choco install ida-free -y
 # Disable Windows Firewalls and AV
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Add-MpPreference -ExclusionPath "C:\tools\"
