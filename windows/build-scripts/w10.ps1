@@ -1,6 +1,8 @@
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 # Enter Choclatry Licence Key
 Start-Process notepad.exe -ArgumentList "$env:USERPROFILE\chocolatey.license.xml" -Wait
+# Upgrade extension
+choco upgrade chocolatey.extension
 # Disable RDP
 Set-ItemProperty -Path ‘HKLM:\System\CurrentControlSet\Control\Terminal Server’-name “fDenyTSConnections” -Value 1
 # Enable Bitlocker Disk Encryption on laptop
