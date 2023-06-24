@@ -45,6 +45,7 @@ choco install teamviewer -y
 choco install openvpn-connect -y
 choco install silverlight -y
 choco install ida-free -y
+choco install ike-scan -y
 # Disable Windows Firewalls and AV
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Add-MpPreference -ExclusionPath "C:\tools\"
