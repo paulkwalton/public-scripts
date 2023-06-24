@@ -106,8 +106,6 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 # Enable Virtual Machine Platform
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 
-# Set WSL 2 as your default version
-wsl --set-default-version 2
 
 # Self-deleting
 $MyPath = $MyInvocation.MyCommand.Path
@@ -116,6 +114,8 @@ Start-Job -ScriptBlock $DeleteScriptBlock -ArgumentList $MyPath
 
 # Define the PostRestartScript content
 $PostRestartScriptContent = @"
+# Set WSL 2 as your default version
+wsl --set-default-version 2
 # Download and install the Linux kernel update package
 `$kernelUpdateUrl = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
 `$kernelUpdateFile = "C:\temp\wsl_update_x64.msi"
