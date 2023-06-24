@@ -121,6 +121,7 @@ $PostRestartScriptContent = @"
 `$kernelUpdateFile = "C:\temp\wsl_update_x64.msi"
 Invoke-WebRequest -Uri `$kernelUpdateUrl -OutFile `$kernelUpdateFile
 Start-Process -FilePath `$kernelUpdateFile -Wait
+Restart-Computer
 "@
 
 # Create PostRestartScript.ps1
