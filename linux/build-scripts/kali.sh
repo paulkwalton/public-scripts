@@ -225,4 +225,4 @@ sudo curl https://sliver.sh/install|sudo bash
 echo "Manually installing VMware tools to allow VMware folder redirection..."
 kali-tweaks
 # Restart Kali, and good to go.
-sudo shutdown -r now
+kex --win -s
