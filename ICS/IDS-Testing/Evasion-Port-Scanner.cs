@@ -1,3 +1,4 @@
+ // This will trigger a network port scan and attempt to connect to a non existent DNS name.
 using System;
 using System.Net;
 using System.Net.Sockets;
