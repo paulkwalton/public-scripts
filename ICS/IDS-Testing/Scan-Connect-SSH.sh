@@ -1,14 +1,30 @@
 #!/bin/bash
 
-# Get the IP address of the current machine
+# Get the IP address and hostname of the current machine
 IP_ADDRESS=$(hostname -I | cut -d' ' -f1)
+HOSTNAME=$(hostname)
 
-# Get the subnet
-SUBNET=$(echo $IP_ADDRESS | cut -d'.' -f1-3)
+# Print the IP address and hostname
+echo "Your Hostname: $HOSTNAME"
+echo "Your IP Address: $IP_ADDRESS"
 
-# Scan the subnet for open SSH ports and attempt to connect
-for i in $(seq 1 254); do
-    if nmap -p 22 $SUBNET.$i | grep -q "22/tcp open"; then
-        gnome-terminal -- ssh $SUBNET.$i &
-    fi
+# Prompt the user to enter the IP or subnet to scan
+read -p "Enter the subnet to scan (in CIDR notation): " SUBNET
+
+# Print the subnet to be scanned
+echo "Scanning Subnet: $SUBNET"
+
+# Scan the subnet for open SSH ports and attempt to connect to each open port
+nmap -p 22 --open -oG - $SUBNET | awk '/Up$/{print $2}' | while read line; do
+    echo "Attempting to connect to $line via SSH"
+    expect -c "
+    spawn ssh $line
+    expect \"*password:\"
+    send \"fakepassword\r\"
+    expect eof
+    "
 done
+
+# Print the current date and time
+echo "Script ran at $(date)"
+
