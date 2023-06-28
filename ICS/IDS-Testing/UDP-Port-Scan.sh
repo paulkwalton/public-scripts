@@ -1,12 +1,22 @@
 #!/bin/bash
 
-# Get the IP address of the current machine
+# Get the IP address and hostname of the current machine
 IP_ADDRESS=$(hostname -I | cut -d' ' -f1)
+HOSTNAME=$(hostname)
 
-# Get the subnet
-SUBNET=$(echo $IP_ADDRESS | cut -d'.' -f1-3)
+# Print the IP address and hostname
+echo "Your Hostname: $HOSTNAME"
+echo "Your IP Address: $IP_ADDRESS"
 
-# Scan the subnet
-for i in $(seq 1 254); do
-    nmap -sU $SUBNET.$i
-done
+# Prompt the user to enter the IP or subnet to scan
+read -p "Enter the IP or subnet to scan (in CIDR notation): " SUBNET
+
+# Print the subnet to be scanned
+echo "Scanning Subnet: $SUBNET"
+
+# Perform a UDP port scan of the top 1000 ports on the subnet
+nmap -sU --top-ports 1000 $SUBNET
+
+# Print the current date and time
+echo "Script ran at $(date)"
+
