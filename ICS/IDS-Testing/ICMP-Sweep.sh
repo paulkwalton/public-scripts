@@ -1,24 +1,19 @@
 #!/bin/bash
 
-# Get the IP address of the current machine
-IP_ADDRESS=$(hostname -I | cut -d' ' -f1)
+# Prompt the user to enter the IP or subnet to scan
+read -p "Enter the IP or subnet to scan (in CIDR notation): " SUBNET
 
-# Get the hostname
+# Get the IP address and hostname of the current machine
+IP_ADDRESS=$(hostname -I | cut -d' ' -f1)
 HOSTNAME=$(hostname)
 
-# Print the hostname and IP address
-echo "Running on host: $HOSTNAME"
-echo "IP Address: $IP_ADDRESS"
-
-# Get the subnet
-SUBNET=$(echo $IP_ADDRESS | cut -d'.' -f1-3)
+# Print the IP address, hostname, and subnet
+echo "Your Hostname: $HOSTNAME"
+echo "Your IP Address: $IP_ADDRESS"
+echo "Scanning Subnet: $SUBNET"
 
 # Perform a ping sweep of the subnet
-for i in $(seq 1 254); do
-    if nmap -sn $SUBNET.$i | grep -q "Host is up"; then
-        echo "$SUBNET.$i is up"
-    fi
-done
+nmap -sn -n -v $SUBNET
 
 # Print the current date and time
 echo "Script ran at $(date)"
