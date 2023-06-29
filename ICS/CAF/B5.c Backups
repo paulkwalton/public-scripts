@@ -1,0 +1,78 @@
+# Check for the presence of the Windows Server Backup feature
+function Check-BackupFeature {
+    $backupFeature = Get-WindowsFeature -Name Windows-Server-Backup -ErrorAction SilentlyContinue
+    if ($backupFeature -and $backupFeature.InstallState -eq 'Installed') {
+        Write-Host "Windows Server Backup feature is installed."
+    } else {
+        Write-Host "Windows Server Backup feature is not installed."
+    }
+}
+
+# Check for any scheduled tasks related to backups
+function Check-BackupScheduledTasks {
+    $backupTasks = Get-ScheduledTask | Where-Object { $_.TaskName -like '*backup*' -or $_.Description -like '*backup*' }
+    if ($backupTasks) {
+        Write-Host "Found the following backup-related scheduled tasks:"
+        foreach ($task in $backupTasks) {
+            Write-Host ("Task Name: " + $task.TaskName + ", State: " + $task.State)
+        }
+    } else {
+        Write-Host "No backup-related scheduled tasks found."
+    }
+}
+
+# Check for the status of the Volume Shadow Copy Service, which is often used for backups
+function Check-VSSServiceStatus {
+    $vssService = Get-Service -Name VSS -ErrorAction SilentlyContinue
+    if ($vssService) {
+        Write-Host ("Volume Shadow Copy Service status: " + $vssService.Status)
+    } else {
+        Write-Host "Volume Shadow Copy Service is not present."
+    }
+}
+
+# Check for services and program folders related to common backup software
+function Check-BackupSoftware {
+    $backupSoftware = @(
+        @{Name="NetBackup"; ServiceNames=@("NetBackup", "nbjm", "nbsl", "nbostpxy", "nbpem", "nbdb", "nbaudit", "nbatd", "bpcompatd"); ProgramFolders=@("Veritas\NetBackup")},
+        @{Name="Backup Exec"; ServiceNames=@("BackupExecAgentAccelerator", "BackupExecAgentBrowser", "BackupExecJobEngine", "BackupExecRPCService", "BackupExecManagementService"); ProgramFolders=@("Veritas\Backup Exec")},
+        @{Name="Veeam"; ServiceNames=@("VeeamBackupSvc", "VeeamDeploySvc", "VeeamGuestHelperSvc", "VeeamCloudSvc", "VeeamCatalogSvc", "VeeamMountSvc"); ProgramFolders=@("Veeam\Backup and Replication")}
+    )
+
+    foreach ($software in $backupSoftware) {
+        $name = $software.Name
+        $serviceNames = $software.ServiceNames
+        $programFolders = $software.ProgramFolders
+
+        Write-Host "Checking for $name..."
+
+        foreach ($serviceName in $serviceNames) {
+            $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
+            if ($service) {
+                Write-Host ("Service found: " + $serviceName + ", Status: " + $service.Status)
+            }
+        }
+
+        foreach ($programFolder in $programFolders) {
+            $programPath = Join-Path -Path 'C:\Program Files' -ChildPath $programFolder
+            if (Test-Path -Path $programPath) {
+                Write-Host ("Program folder found: " + $programPath)
+            } else {
+                Write-Host ("Program folder not found: " + $programPath)
+            }
+        }
+    }
+}
+
+# Check for the Windows Server Backup feature
+Check-BackupFeature
+
+# Check for any backup-related scheduled tasks
+Check-BackupScheduledTasks
+
+# Check for the status of the Volume Shadow Copy Service
+Check-VSSServiceStatus
+
+# Check for services and program folders related to common backup software
+Check-BackupSoftware
+
