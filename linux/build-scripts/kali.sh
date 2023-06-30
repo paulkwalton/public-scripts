@@ -105,6 +105,7 @@ sudo git clone https://github.com/Sw4mpf0x/PowerLurk.git /opt/persistence/window
 sudo git clone https://github.com/3ndG4me/spraygen.git /opt/passwordspry-creator
 sudo git clone https://github.com/ITI/ICS-Security-Tools.git /opt/ics/resources
 sudo git clone https://github.com/lgandx/PCredz.git /opt/packetcapture/pcredz
+git clone --recursive https://github.com/BC-SECURITY/Empire.git -y
 echo "Installing KWprocessor and generating keyboard walk passwords..."
 cd /opt/kwprocessor/
 sudo make
