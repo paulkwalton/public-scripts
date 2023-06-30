@@ -11,6 +11,7 @@ mkdir c:\tools
 # Install Tools Via Choc
 choco install git.install -y
 choco install flameshot -y
+choco install proxifier -y
 choco install network-miner -y
 choco install javaruntime -y
 choco install dotnetreactor -y
