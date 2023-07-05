@@ -78,6 +78,7 @@ sudo git clone https://github.com/ropnop/kerbrute /opt/adtools/kerbrute
 sudo git clone https://github.com/sc0tfree/updog.git /opt/filehosting
 sudo git clone https://github.com/Flangvik/SharpCollection.git /opt/sharpcollection
 sudo git clone https://github.com/phra/PEzor.git /opt/PEzor
+sudo git clone https://github.com/fortra/nanodump.git /opt/bof/nanodump
 sudo git clone https://github.com/FortyNorthSecurity/RandomScripts.git /opt/shellcode-formatter
 sudo git clone https://github.com/hashcat/kwprocessor.git /opt/kwprocessor
 sudo git clone https://github.com/dirkjanm/PrivExchange.git /opt/PrivExchange
