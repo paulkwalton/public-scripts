@@ -15,3 +15,5 @@ EOF
 
 # Running Metasploit with the created rc file
 msfconsole -r ms08_067_scan.rc
+
+echo "Script ran at $(date)"
