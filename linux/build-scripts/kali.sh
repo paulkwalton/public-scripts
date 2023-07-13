@@ -156,6 +156,8 @@ sudo apt install novnc -y
 sudo apt install tcpdump -y
 sudo apt install msfpc -y
 sudo apt install smbclient -y
+sudo apt install lldpd -y
+sudo service lldpd start
 sudo apt install enum4linux -y
 sudo apt install default-mysql-client -y
 sudo gem install highline -y
