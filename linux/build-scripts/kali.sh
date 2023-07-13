@@ -98,6 +98,7 @@ sudo git clone https://github.com/fox-it/BloodHound.py.git /opt/adtools/BloodHou
 sudo git clone https://github.com/kmahyyg/mremoteng-decrypt.git /opt/remoteng-decrypt
 sudo wget -O /opt/network/putty.exe https://the.earth.li/~sgtatham/putty/latest/w64/putty.exe
 sudo wget -O /opt/network/winscp.exe https://winscp.net/download/files/2023010513098bec75153682d04acc7dafc6c99d5ae2/WinSCP-5.21.6-Portable.zip
+sudo wget -O /opt/icspasswords/scada.csv https://github.com/ITI/ICS-Security-Tools/blob/f829a32f98fadfa5206d3a41fc3612dd4741c8b3/configurations/passwords/scadapass.csv
 sudo wget -O /opt/network/kerbrute-linux-64 https://github.com/ropnop/kerbrute/releases/download/v1.0.3/kerbrute_linux_amd64
 sudo wget -O /opt/network/proxifierpe.zip https://www.proxifier.com/download/ProxifierPE.zip
 sudo wget -O /opt/network/proxifier.zip https://www.proxifier.com/download/ProxifierSetup.exe
