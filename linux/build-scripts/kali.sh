@@ -107,6 +107,16 @@ sudo git clone https://github.com/Sw4mpf0x/PowerLurk.git /opt/persistence/window
 sudo git clone https://github.com/3ndG4me/spraygen.git /opt/passwordspry-creator
 sudo git clone https://github.com/ITI/ICS-Security-Tools.git /opt/ics/resources
 sudo git clone https://github.com/lgandx/PCredz.git /opt/packetcapture/pcredz
+# Custom Request Section Section <Start>
+sudo apt install certipy-ad -y
+sudo apt install jq -y
+sudo apt install chromium -y
+sudo git clone https://github.com/dirkjanm/krbrelayx
+sudo git clone https://github.com/topotam/PetitPotam
+sudo git clone https://github.com/Ridter/noPac
+sudo git clone https://github.com/zer1t0/certi
+sudo wget -O /opt/gowitness https://github.com/sensepost/gowitness/releases/download/2.5.0/gowitness-2.5.0-linux-amd64
+# Custom Request Section Section <End>
 git clone --recursive https://github.com/BC-SECURITY/Empire.git -y
 echo "Installing KWprocessor and generating keyboard walk passwords..."
 cd /opt/kwprocessor/
