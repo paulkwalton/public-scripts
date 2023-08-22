@@ -98,8 +98,7 @@ git clone https://github.com/mgeeky/PackMyPayload.git c:\tools\packmypayload
 git clone https://github.com/skahwah/SQLRecon.git c:\tools\sqlrecon
 git clone https://github.com/GhostPack/SafetyKatz.git c:\tools\safetykatz
 git clone https://github.com/paulkwalton/public-scripts.git c:\tools\public-scripts
-
-
+git clone https://github.com/antonioCoco/RogueWinRM.git c:\tools\roguewinrm
 # Restart Windows & rename Windows
 Write-Output "Rename & Reboot Windows"
 Rename-Computer -NewName "WinTak"
