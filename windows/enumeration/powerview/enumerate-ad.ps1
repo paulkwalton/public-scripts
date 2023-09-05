@@ -3,7 +3,7 @@
 # runas /netonly /user:hacked.local\paul.walton powershell`
 # Import-Module .\Recon.psm1`
 
-# Declare variables for domain and domain controller IP address
+# Declare variables for domain and domain controller IP address. Change as required.
 $domain = "hacked.local"
 $domainController = "192.168.15.128"
 
