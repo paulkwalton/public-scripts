@@ -1,4 +1,9 @@
- # Declare variables for domain and domain controller IP address
+# This will execute powerview on a non domain joined PC. It will require powershell to be run as a legit domain user
+
+# runas /netonly /user:hacked.local\paul.walton powershell`
+# Import-Module .\Recon.psm1`
+
+# Declare variables for domain and domain controller IP address
 $domain = "hacked.local"
 $domainController = "192.168.15.128"
 
