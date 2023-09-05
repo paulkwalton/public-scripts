@@ -23,6 +23,13 @@ Get-DomainPolicy -Domain $domain -DomainController $domainController
 Read-Host "Press Enter to continue..."
 Write-Host "`n"
 
+# Enumerate all domain joined machines
+Write-Host "Enumerating Domain joined machines..." -ForegroundColor Red
+Start-Sleep -Seconds 2
+ Get-DomainComputer -Properties OperatingSystem, Name, DnsHostName -Domain $domain -DomainController $domainController | Sort-Object -Property DnsHostName 
+Read-Host "Press Enter to continue..."
+Write-Host "`n"
+
 # Find all Domain Admins with name and description
 Write-Host "Finding all Domain Admins..." -ForegroundColor Red
 Start-Sleep -Seconds 2
@@ -71,10 +78,4 @@ Start-Sleep -Seconds 2
  Get-DomainUser -Domain $domain -DomainController $domainController | select UserPrincipalName | Out-File -Append "$env:USERPROFILE\Documents\DomainUsers.txt"
 Read-Host "Press Enter to continue..."
 Write-Host "`n"
-
-# Find All local admin users on every endpoint
-Write-Host "Finding All local admin users" -ForegroundColor Red
-Start-Sleep -Seconds 2
-  Find-DomainLocalGroupMember -verbose -Domain $domain -DomainController $domainController
-Read-Host "Press Enter to continue..."
-Write-Host "`n" 
+ 
