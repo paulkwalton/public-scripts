@@ -111,10 +111,11 @@ sudo git clone https://github.com/lgandx/PCredz.git /opt/packetcapture/pcredz
 sudo apt install certipy-ad -y
 sudo apt install jq -y
 sudo apt install chromium -y
-sudo git clone https://github.com/dirkjanm/krbrelayx
-sudo git clone https://github.com/topotam/PetitPotam
-sudo git clone https://github.com/Ridter/noPac
-sudo git clone https://github.com/zer1t0/certi
+sudo git clone https://github.com/dirkjanm/krbrelayx /opt/krbrelayx
+sudo git clone https://github.com/topotam/PetitPotam /opt/petitpotam
+sudo git clone https://github.com/Ridter/noPac /opt/nopac
+sudo git clone https://github.com/zer1t0/certi /opt/certi
+sudo git clone https://github.com/funoverip/mcafee-sitelist-pwd-decryption /opt/mcafee-sitelist-pwd-decryption
 sudo wget -O /opt/gowitness https://github.com/sensepost/gowitness/releases/download/2.5.0/gowitness-2.5.0-linux-amd64
 # Custom Request Section Section <End>
 git clone --recursive https://github.com/BC-SECURITY/Empire.git -y
