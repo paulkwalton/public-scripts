@@ -2,8 +2,8 @@
 $ApiKey = "<ENTER KEY>"
 $ApiEndpoint = "https://api.openai.com/v1/chat/completions"
 $discordWebhookUrl = "<ENTER KEY>"
-$domain = "hacked.local"
-$domainController = "192.168.15.128"
+$domain = "domain.local"
+$domainController = "<ENTER IP>"
 
 $AiSystemMessage = "Present the data exactly as your receieve it, but format to be readable with a header seperating each command. Add commentary at the end to highlight areas of concern from a security perspective"
 
