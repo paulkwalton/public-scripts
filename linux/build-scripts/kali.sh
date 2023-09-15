@@ -107,6 +107,9 @@ sudo git clone https://github.com/Sw4mpf0x/PowerLurk.git /opt/persistence/window
 sudo git clone https://github.com/3ndG4me/spraygen.git /opt/passwordspry-creator
 sudo git clone https://github.com/ITI/ICS-Security-Tools.git /opt/ics/resources
 sudo git clone https://github.com/lgandx/PCredz.git /opt/packetcapture/pcredz
+sudo export DIVE_VERSION=$(curl -sL "https://api.github.com/repos/wagoodman/dive/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+curl -OL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.deb
+sudo apt install ./dive_${DIVE_VERSION}_linux_amd64.deb
 # Custom Request Section Section <Start>
 sudo apt install certipy-ad -y
 sudo apt install jq -y
