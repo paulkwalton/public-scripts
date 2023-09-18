@@ -50,6 +50,7 @@ choco install silverlight -y
 choco install ida-free -y
 choco install ike-scan -y
 choco install solarwinds-tftp-server -y
+
 # Disable Windows Firewalls and AV
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Add-MpPreference -ExclusionPath "C:\tools\"
@@ -141,4 +142,5 @@ $PostRestartScriptContent | Out-File -FilePath 'C:\temp\PostRestartScript.ps1'
 Copy-Item -Path 'C:\temp\PostRestartScript.ps1' -Destination "$([Environment]::GetFolderPath('Desktop'))\RunMeAfterReboot.ps1"
 
 # Restart the computer
+choco install docker-desktop -y
 Restart-Computer
