@@ -197,6 +197,9 @@ sudo apt install neo4j -y
 sudo apt install gobuster -y
 sudo apt install auditd audispd-plugins -y
 sudo apt install -y kali-win-kex
+sudo apt install -y docker.io
+sudo apt install docker-compose -y
+sudo systemctl enable docker --now
 sudo pip install mitm6
 sudo pip install pyftpdlib
 apt install golang-go -y
@@ -243,5 +246,6 @@ echo "Installing Sliver C2 framework..."
 sudo curl https://sliver.sh/install|sudo bash
 echo "Manually installing VMware tools to allow VMware folder redirection..."
 kali-tweaks
-# Restart Kali, and good to go.
+# Install and configure bloodhound 
+curl https://raw.githubusercontent.com/SpecterOps/bloodhound/main/examples/docker-compose/docker-compose.yml | docker compose -f - up 
 kex --win -s
