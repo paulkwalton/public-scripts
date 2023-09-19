@@ -247,5 +247,5 @@ sudo curl https://sliver.sh/install|sudo bash
 echo "Manually installing VMware tools to allow VMware folder redirection..."
 kali-tweaks
 # Install and configure bloodhound 
-curl https://raw.githubusercontent.com/SpecterOps/bloodhound/main/examples/docker-compose/docker-compose.yml | docker compose -f - up 
+curl https://raw.githubusercontent.com/SpecterOps/bloodhound/main/examples/docker-compose/docker-compose.yml | docker-compose -f - up 
 kex --win -s
