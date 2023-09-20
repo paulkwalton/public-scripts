@@ -102,6 +102,7 @@ git clone https://github.com/paulkwalton/public-scripts.git c:\tools\public-scri
 git clone https://github.com/antonioCoco/RogueWinRM.git c:\tools\roguewinrm
 git clone https://github.com/itm4n/PrivescCheck.git c:\tools\PrivescCheck
 git clone https://github.com/wavestone-cdt/powerpxe.git c:\tools\powerpxe
+Invoke-WebRequest -Uri "https://download.sysinternals.com/files/AccessChk.zip" -OutFile "C:\tools\AccessChk.zip"
 # Restart Windows & rename Windows
 Write-Output "Rename & Reboot Windows"
 Rename-Computer -NewName "WinTak"
