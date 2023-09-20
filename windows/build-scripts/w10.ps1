@@ -103,6 +103,11 @@ git clone https://github.com/antonioCoco/RogueWinRM.git c:\tools\roguewinrm
 git clone https://github.com/itm4n/PrivescCheck.git c:\tools\PrivescCheck
 git clone https://github.com/wavestone-cdt/powerpxe.git c:\tools\powerpxe
 Invoke-WebRequest -Uri "https://download.sysinternals.com/files/AccessChk.zip" -OutFile "C:\tools\AccessChk.zip"
+Invoke-WebRequest -Uri "https://github.com/vletoux/pingcastle/releases/download/3.1.0.1/PingCastle_3.1.0.1.zip" -OutFile "C:\tools\PingCastle_3.1.0.1.zip"
+Invoke-WebRequest -Uri "https://download.sysinternals.com/files/ProcessMonitor.zip" -OutFile "C:\tools\ProcessMonitor.zip"
+
+
+This command will download the `ProcessMonitor.zip` file and save it to the `C:\tools\` directory. Ensure the directory exists before executing the command.
 # Restart Windows & rename Windows
 Write-Output "Rename & Reboot Windows"
 Rename-Computer -NewName "WinTak"
