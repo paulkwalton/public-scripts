@@ -102,6 +102,7 @@ git clone https://github.com/paulkwalton/public-scripts.git c:\tools\public-scri
 git clone https://github.com/antonioCoco/RogueWinRM.git c:\tools\roguewinrm
 git clone https://github.com/itm4n/PrivescCheck.git c:\tools\PrivescCheck
 git clone https://github.com/wavestone-cdt/powerpxe.git c:\tools\powerpxe
+git clone https://github.com/vdohney/keepass-password-dumper.git c:\tools\keepass-password-dumper
 Invoke-WebRequest -Uri "https://download.sysinternals.com/files/AccessChk.zip" -OutFile "C:\tools\AccessChk.zip"
 Invoke-WebRequest -Uri "https://github.com/vletoux/pingcastle/releases/download/3.1.0.1/PingCastle_3.1.0.1.zip" -OutFile "C:\tools\PingCastle_3.1.0.1.zip"
 Invoke-WebRequest -Uri "https://download.sysinternals.com/files/ProcessMonitor.zip" -OutFile "C:\tools\ProcessMonitor.zip"
