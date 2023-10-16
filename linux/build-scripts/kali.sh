@@ -195,6 +195,7 @@ sudo apt install amass-common -y
 sudo apt install psql -y
 sudo apt install neo4j -y
 sudo apt install gobuster -y
+sudo apt install feroxbuster -y
 sudo apt install auditd audispd-plugins -y
 sudo apt install -y kali-win-kex
 sudo apt install -y docker.io
