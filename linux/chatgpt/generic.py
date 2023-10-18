@@ -15,7 +15,7 @@ def send_to_chatgpt(program_output):
         model="gpt-4",
         messages=[{"role": "system", "content": "You are a helpful assistant."}, 
                   {"role": "user", "content": f"Analyse the output and provide a commentary. View through the eyes of a security consultant looking for a weakness or vulnerability if applicable.:\n{program_output}"}],
-        max_tokens=1024
+        max_tokens=8000
     )
     
     analysis = response.choices[0].message['content']
