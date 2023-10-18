@@ -14,7 +14,7 @@ def send_to_chatgpt(program_output):
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[{"role": "system", "content": "You are a helpful assistant."}, 
-                  {"role": "user", "content": f"Analyse the output and provide a commentary. View through the eyes of a security consultant looking for a weakness or vulnerability if applicable.:\n{program_output}"}],
+                  {"role": "user", "content": f"Analyse the output and provide a commentary. Use the perspective of a security consultant looking for a weakness or vulnerability. At the bottom highlight key areas to focus on with example commands from common security toolsets:\n{program_output}"}],
         max_tokens=8000
     )
     
