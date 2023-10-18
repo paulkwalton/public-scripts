@@ -14,7 +14,7 @@ def send_to_chatgpt(program_output):
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[{"role": "system", "content": "You are a helpful assistant."}, 
-                  {"role": "user", "content": f"Analyse the output data and provide a commentary:\n{program_output}"}],
+                  {"role": "user", "content": f"Analyse the output data and provide a commentary. This is for a security team, view through the eyes of an adversary looking for a weakness.:\n{program_output}"}],
         max_tokens=1024
     )
     
