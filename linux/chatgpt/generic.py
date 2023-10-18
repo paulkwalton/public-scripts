@@ -9,12 +9,12 @@ def run_program(command_line):
     return result
 
 def send_to_chatgpt(program_output):
-    openai.api_key = '<ENTER KEY>'
+    openai.api_key = 'ENTER KEY'
     
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[{"role": "system", "content": "You are a helpful assistant."}, 
-                  {"role": "user", "content": f"Analyse the output data from a pentester perspective, provide a detailed commentary on each port and how they could be exploited, highlight specific tools which can be used and the appropriate syntax to run them i.e crackmapexec, hydra, kerbrute etc. List hostname, IP address and criticality (i.e Critical if anonymous FTP is enabled, low if no exploitable ports are exposed) at top of the report.:\n{program_output}"}],
+                  {"role": "user", "content": f"Analyse the output data and provide a commentary:\n{program_output}"}],
         max_tokens=1024
     )
     
@@ -22,7 +22,7 @@ def send_to_chatgpt(program_output):
     return analysis
 
 def post_to_discord(content):
-    DISCORD_WEBHOOK_URL = '<ENTER WEBHOOK>'
+    DISCORD_WEBHOOK_URL = 'ENTER WEBHOOK'
     
     # Split content into chunks of 2000 characters
     chunk_size = 2000
@@ -39,5 +39,7 @@ def post_to_discord(content):
 if __name__ == "__main__":
     command_line = input("Enter the full command to run (e.g. 'nmap -sS -sV -sC 192.168.1.1'): ")
     program_output = run_program(command_line)
+    print("Command output:", program_output)
     analysis = send_to_chatgpt(program_output)
+    print("Analysis from OpenAI:", analysis)
     post_to_discord(analysis)
