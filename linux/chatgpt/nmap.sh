@@ -12,10 +12,10 @@ def send_to_chatgpt(scan_data):
     openai.api_key = '<ENTER KEY>'
     
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[{"role": "system", "content": "You are a helpful assistant."}, 
                   {"role": "user", "content": f"Analyse the scan data from a pentester perspective, provide a detailed commentary on each port and how they could be exploited, highlight specific tools which can be used and the appropriate syntax to run them i.e crackmapexec, hydra, kerbrute etc. List hostname, IP address and criticality (i.e Critical if anonymous FTP is enabled, low if no exploitable ports are exposed) at top of the report.:\n{scan_data}"}],
-        max_tokens=1024
+        max_tokens=4192
     )
     
     analysis = response.choices[0].message['content']
