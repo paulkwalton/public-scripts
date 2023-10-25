@@ -11,7 +11,6 @@ mkdir c:\tools
 # Install Tools Via Choc
 choco install proxifier -y
 choco install openoffice -y
-choco install burp-suite-pro-edition -y
 choco install zap -y
 choco install adobereader -y
 choco install notepadplusplus.install -y
