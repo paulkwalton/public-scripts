@@ -3,15 +3,12 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 Start-Process notepad.exe -ArgumentList "$env:USERPROFILE\chocolatey.license.xml" -Wait
 # Upgrade extension
 choco upgrade chocolatey.extension
-# Disable RDP
-Set-ItemProperty -Path ‘HKLM:\System\CurrentControlSet\Control\Terminal Server’-name “fDenyTSConnections” -Value 1
 # Enable Bitlocker Disk Encryption on laptop
 manage-bde -on C: -recoverypassword
 mkdir c:\tools
 # Install Tools Via Choc
 choco install proxifier -y
 choco install openoffice -y
-choco install zap -y
 choco install adobereader -y
 choco install notepadplusplus.install -y
 choco install 7zip.install -y
@@ -27,7 +24,6 @@ choco install rsat -y
 choco install python -y
 choco install ida-free -y
 choco install ike-scan -y
-choco install solarwinds-tftp-server -y
 #Disable Windows Firewalls and AV
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Add-MpPreference -ExclusionPath "C:\tools\"
