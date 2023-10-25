@@ -9,24 +9,13 @@ Set-ItemProperty -Path ‘HKLM:\System\CurrentControlSet\Control\Terminal Server
 manage-bde -on C: -recoverypassword
 mkdir c:\tools
 # Install Tools Via Choc
-choco install git.install -y
-choco install flameshot -y
 choco install proxifier -y
-choco install network-miner -y
-choco install javaruntime -y
-choco install dotnetreactor -y
-choco install citrix-receiver -y
-choco install fiddler -y
 choco install openoffice -y
 choco install burp-suite-pro-edition -y
 choco install zap -y
-choco install bginfo -y
 choco install adobereader -y
-choco install googlechrome -y
-choco install firefox -y
 choco install notepadplusplus.install -y
 choco install 7zip.install -y
-choco install winrar -y
 choco install sysinternals -y
 choco install putty.install -y
 choco install filezilla -y
@@ -34,19 +23,9 @@ choco install adexplorer -y
 choco install nmap -y
 choco install wireshark -y
 choco install winscp -y
-choco install vnc-viewer -y
-choco install -y keepass.install
-choco install -y postman
 choco install -y sql-server-management-studio
 choco install rsat -y
 choco install python -y
-choco install golang -y
-choco install keepassx -y
-choco install angryip -y
-choco install vlc -y
-choco install teamviewer -y
-choco install openvpn-connect -y
-choco install silverlight -y
 choco install ida-free -y
 choco install ike-scan -y
 choco install solarwinds-tftp-server -y
