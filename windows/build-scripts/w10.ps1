@@ -28,8 +28,7 @@ choco install python -y
 choco install ida-free -y
 choco install ike-scan -y
 choco install solarwinds-tftp-server -y
-
-# Disable Windows Firewalls and AV
+#Disable Windows Firewalls and AV
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
 Add-MpPreference -ExclusionPath "C:\tools\"
 #Clone Tools From Github
