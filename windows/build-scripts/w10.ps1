@@ -84,48 +84,5 @@ git clone https://github.com/vdohney/keepass-password-dumper.git c:\tools\keepas
 Invoke-WebRequest -Uri "https://download.sysinternals.com/files/AccessChk.zip" -OutFile "C:\tools\AccessChk.zip"
 Invoke-WebRequest -Uri "https://github.com/vletoux/pingcastle/releases/download/3.1.0.1/PingCastle_3.1.0.1.zip" -OutFile "C:\tools\PingCastle_3.1.0.1.zip"
 Invoke-WebRequest -Uri "https://download.sysinternals.com/files/ProcessMonitor.zip" -OutFile "C:\tools\ProcessMonitor.zip"
-
-
-This command will download the `ProcessMonitor.zip` file and save it to the `C:\tools\` directory. Ensure the directory exists before executing the command.
-# Restart Windows & rename Windows
-Write-Output "Rename & Reboot Windows"
-Rename-Computer -NewName "WinTak"
-
-# Create the directory if it does not exist
-if (!(Test-Path -Path "C:\temp\")) {
-    New-Item -ItemType Directory -Force -Path "C:\temp\"
-}
-
-# Enable Windows Subsystem for Linux (WSL)
-dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-
-# Enable Virtual Machine Platform
-dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-
-
-# Self-deleting
-$MyPath = $MyInvocation.MyCommand.Path
-$DeleteScriptBlock = { param($path) Start-Sleep -Seconds 2; Remove-Item -Path $path }
-Start-Job -ScriptBlock $DeleteScriptBlock -ArgumentList $MyPath
-
-# Define the PostRestartScript content
-$PostRestartScriptContent = @"
-# Set WSL 2 as your default version
-wsl --set-default-version 2
-# Download and install the Linux kernel update package
-`$kernelUpdateUrl = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
-`$kernelUpdateFile = "C:\temp\wsl_update_x64.msi"
-Invoke-WebRequest -Uri `$kernelUpdateUrl -OutFile `$kernelUpdateFile
-Start-Process -FilePath `$kernelUpdateFile -Wait
-Restart-Computer
-"@
-
-# Create PostRestartScript.ps1
-$PostRestartScriptContent | Out-File -FilePath 'C:\temp\PostRestartScript.ps1'
-
-# Copy the PostRestartScript.ps1 to the Desktop
-Copy-Item -Path 'C:\temp\PostRestartScript.ps1' -Destination "$([Environment]::GetFolderPath('Desktop'))\RunMeAfterReboot.ps1"
-
-# Restart the computer
-choco install docker-desktop -y
+#Restart the computer
 Restart-Computer
