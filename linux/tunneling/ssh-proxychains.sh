@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # Prompt the user for the target user, host, and password
@@ -8,6 +9,8 @@ echo
 
 # Set the local port for the SSH tunnel
 LOCAL_SOCKS_PORT="9050"
+sudo iptables -A INPUT -p tcp --dport 9050 -j ACCEPT
+echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
 
 # Check for any existing SSH tunnels on port 8080 and terminate them
 EXISTING_TUNNEL_PIDS=$(lsof -ti :$LOCAL_SOCKS_PORT)
@@ -18,7 +21,7 @@ fi
 
 # Create the SSH tunnel
 echo "Creating SSH tunnel to $TARGET_USER@$TARGET_HOST on port 22..."
-sshpass -p "$TARGET_PASS" ssh -f -N -D $LOCAL_SOCKS_PORT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $TARGET_USER@$TARGET_HOST -p 22
+sshpass -p "$TARGET_PASS" ssh -f -N -D $LOCAL_SOCKS_PORT -g -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $TARGET_USER@$TARGET_HOST -p 22
 
 if [ $? -eq 0 ]; then
   echo "SSH tunnel created successfully. You can now use proxychains manually."
@@ -28,4 +31,4 @@ else
 fi
 
 lsof -i
-
+sudo sysctl -p
