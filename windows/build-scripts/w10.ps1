@@ -7,6 +7,7 @@ choco upgrade chocolatey.extension
 manage-bde -on C: -recoverypassword
 mkdir c:\tools
 # Install Tools Via Choc
+choco install git -y
 choco install openoffice -y
 choco install notepadplusplus.install -y
 choco install 7zip.install -y
