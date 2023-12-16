@@ -47,7 +47,7 @@ sudo apt install -y kali-linux-default
 sudo apt install leafpad -y
 sudo apt install default-jdk -y
 sudo apt install build-essential -y
-sudo apt install windows-binaries -y 
+sudo apt install windows-binaries -y
 curl https://i.jpillora.com/chisel! | bash
 echo "Setting up and starting SSH server..."
 sudo apt install openssh-server -y
@@ -110,17 +110,40 @@ sudo git clone https://github.com/lgandx/PCredz.git /opt/packetcapture/pcredz
 sudo export DIVE_VERSION=$(curl -sL "https://api.github.com/repos/wagoodman/dive/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
 curl -OL https://github.com/wagoodman/dive/releases/download/v${DIVE_VERSION}/dive_${DIVE_VERSION}_linux_amd64.deb
 sudo apt install ./dive_${DIVE_VERSION}_linux_amd64.deb
-# Custom Request Section Section <Start>
+# Custom Request Section <Start>
 sudo apt install certipy-ad -y
 sudo apt install jq -y
 sudo apt install chromium -y
+sudo apt install htop -y
+sudo apt install ncdu -y
+sudo apt install peass -y
+sudo apt install witnessme -y
 sudo git clone https://github.com/dirkjanm/krbrelayx /opt/krbrelayx
 sudo git clone https://github.com/topotam/PetitPotam /opt/petitpotam
 sudo git clone https://github.com/Ridter/noPac /opt/nopac
 sudo git clone https://github.com/zer1t0/certi /opt/certi
 sudo git clone https://github.com/funoverip/mcafee-sitelist-pwd-decryption /opt/mcafee-sitelist-pwd-decryption
 sudo wget -O /opt/gowitness https://github.com/sensepost/gowitness/releases/download/2.5.0/gowitness-2.5.0-linux-amd64
-# Custom Request Section Section <End>
+# Set up servicescan
+apt-get install -y \
+  libssl-dev \
+  swig \
+  python3-dev \
+  gcc
+# Set up nmaphosts
+ln -s /opt/nmaphosts/nmaphosts.py /usr/bin/nmaphosts
+chmod +x /usr/bin/nmaphosts
+# Set up pwdumpstats
+git clone https://github.com/dionach/pwdumpstats.git /opt/pwdumpstats
+ln -s /opt/pwdumpstats/pwdumpstats.py /usr/bin/pwdumpstats
+chmod +x /usr/bin/pwdumpstats
+# Set up Nessus
+LATEST_NESSUS_VERSION="$(curl https://www.tenable.com/downloads/api/v2/pages/nessus | jq -r '.releases.latest | keys | .[0]' | sed 's/Nessus - //')"
+curl "https://www.tenable.com/downloads/api/v2/pages/nessus/files/Nessus-${LATEST_NESSUS_VERSION}-debian10_amd64.deb" \
+  -o /tmp/nessus.dpkg
+dpkg -i /tmp/nessus.dpkg
+systemctl enable nessusd
+# Custom Request Section <End>
 git clone --recursive https://github.com/BC-SECURITY/Empire.git -y
 echo "Installing KWprocessor and generating keyboard walk passwords..."
 cd /opt/kwprocessor/
