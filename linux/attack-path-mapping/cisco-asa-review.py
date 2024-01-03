@@ -42,14 +42,14 @@ def parse_cisco_asa_config(file_path, object_groups):
                             source, destination = extract_source_destination(line)
                             source_details = object_groups.get(source, [source])
                             destination_details = object_groups.get(destination, [destination])
-                            attack_path = check_attack_path(source_details)
-                            remote_mgmt_rules.append((protocol, line.strip(), source_details, destination_details, attack_path))
+                            ingress_from_enterprise = check_attack_path(source_details)
+                            egress_to_enterprise = check_egress_to_enterprise(destination_details)
+                            remote_mgmt_rules.append((protocol, line.strip(), source_details, destination_details, ingress_from_enterprise, egress_to_enterprise))
                             break
 
     return remote_mgmt_rules
 
 def extract_source_destination(rule):
-    # Updated regex to match both direct object and object-group references
     match = re.search(r'extended (permit|deny) (tcp|udp) (object-group (\S+)|object (\S+)|(\S+)) (object-group (\S+)|object (\S+)|(\S+))', rule)
     if match:
         source = match.group(4) or match.group(5) or match.group(6)
@@ -58,14 +58,21 @@ def extract_source_destination(rule):
     return '', ''
 
 def check_attack_path(source_details):
+    trigger_keywords = ["blan", "azure", "internet", "external", "vpn", "ssn"]
     for detail in source_details:
-        if "blan" in detail or "enterprise" in detail or "azure" in detail or "internet" in detail or "oracle" in detail or "10.189" in detail or "10.188" in detail:
+        if any(keyword.lower() in detail.lower() for keyword in trigger_keywords):
+            return "Yes"
+    return "No"
+
+def check_egress_to_enterprise(destination_details):
+    trigger_keywords = ["blan", "azure", "internet", "external", "vpn", "ssn"]
+    for detail in destination_details:
+        if any(keyword.lower() in detail.lower() for keyword in trigger_keywords):
             return "Yes"
     return "No"
 
 def generate_html_table(remote_mgmt_rules):
-# Sort the rules so that 'Attack Path: Yes' comes first
-    remote_mgmt_rules.sort(key=lambda rule: rule[-1], reverse=True)
+    remote_mgmt_rules.sort(key=lambda rule: (rule[4], rule[5]), reverse=True)
     html = '''
     <html>
     <head>
@@ -92,11 +99,12 @@ def generate_html_table(remote_mgmt_rules):
                 <th>Source</th>
                 <th>Destination</th>
                 <th>Rule</th>
-                <th>Ingress  from enterprise</th>
+                <th>Ingress from enterprise</th>
+                <th>Egress to enterprise</th>
             </tr>
     '''
 
-    for protocol, rule, source_details, destination_details, attack_path in remote_mgmt_rules:
+    for protocol, rule, source_details, destination_details, ingress_from_enterprise, egress_to_enterprise in remote_mgmt_rules:
         html += f'''
             <tr>
                 <td>{protocol}</td>
@@ -104,7 +112,8 @@ def generate_html_table(remote_mgmt_rules):
                 <td>{"<br>".join(source_details)}</td>
                 <td>{"<br>".join(destination_details)}</td>
                 <td>{rule}</td>
-                <td>{attack_path}</td>
+                <td>{ingress_from_enterprise}</td>
+                <td>{egress_to_enterprise}</td>
             </tr>
         '''
 
@@ -115,17 +124,6 @@ def generate_html_table(remote_mgmt_rules):
     '''
 
     return html
-
-
-def print_attack_path_sources(remote_mgmt_rules):
-    attack_path_sources = set()
-    for _, _, source_details, _, attack_path in remote_mgmt_rules:
-        if attack_path == "Yes":
-            attack_path_sources.update(source_details)
-    
-    print("Sources with Attack Path 'Yes':")
-    for source in sorted(attack_path_sources):
-        print(source)
 
 # Main script execution
 asa_config_path = input("Enter the path to your ASA config file: ")
@@ -139,6 +137,3 @@ with open(output_file, 'w') as file:
     file.write(html_output)
 
 print(f"Output written to {output_file}")
-
-# Print sources with attack path 'Yes'
-print_attack_path_sources(remote_mgmt_rules)
