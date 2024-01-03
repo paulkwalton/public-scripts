@@ -23,10 +23,13 @@ def parse_cisco_asa_config(file_path, object_groups):
     mgmt_protocols = {
         'RDP': ['3389', 'rdp'],
         'SMB': ['445', 'smb'],
+        'NETBIOS': ['139', 'netbios'],        
         'HTTP': ['80', 'http'],
         'FTP': ['21', 'ftp'],
         'HTTPS': ['443', 'https'],
+        'PROXY': ['8080', 'proxy'],        
         'VNC': ['5900', 'vnc'],
+        'SQL': ['1433', 'sql'],
         'PCAnywhere': ['5631', 'pcanywhere'],
         'SSH': ['22', 'ssh'],
         'Telnet': ['23', 'telnet'],
