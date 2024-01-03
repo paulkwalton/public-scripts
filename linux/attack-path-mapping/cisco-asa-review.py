@@ -23,6 +23,7 @@ def parse_cisco_asa_config(file_path, object_groups):
     mgmt_protocols = {
         'RDP': ['3389', 'rdp'],
         'HTTP': ['80', 'http'],
+        'FTP': ['21', 'ftp'],
         'HTTPS': ['443', 'https'],
         'VNC': ['5900', 'vnc'],
         'PCAnywhere': ['5631', 'pcanywhere'],
@@ -58,11 +59,13 @@ def extract_source_destination(rule):
 
 def check_attack_path(source_details):
     for detail in source_details:
-        if "blan" in detail or "enterprise" in detail:
+        if "blan" in detail or "enterprise" in detail or "azure" in detail or "internet" in detail or "oracle" in detail or "10.189" in detail or "10.188" in detail:
             return "Yes"
     return "No"
 
 def generate_html_table(remote_mgmt_rules):
+# Sort the rules so that 'Attack Path: Yes' comes first
+    remote_mgmt_rules.sort(key=lambda rule: rule[-1], reverse=True)
     html = '''
     <html>
     <head>
@@ -89,7 +92,7 @@ def generate_html_table(remote_mgmt_rules):
                 <th>Source</th>
                 <th>Destination</th>
                 <th>Rule</th>
-                <th>Attack Path from enterprise</th>
+                <th>Ingress  from enterprise</th>
             </tr>
     '''
 
@@ -113,6 +116,17 @@ def generate_html_table(remote_mgmt_rules):
 
     return html
 
+
+def print_attack_path_sources(remote_mgmt_rules):
+    attack_path_sources = set()
+    for _, _, source_details, _, attack_path in remote_mgmt_rules:
+        if attack_path == "Yes":
+            attack_path_sources.update(source_details)
+    
+    print("Sources with Attack Path 'Yes':")
+    for source in sorted(attack_path_sources):
+        print(source)
+
 # Main script execution
 asa_config_path = input("Enter the path to your ASA config file: ")
 object_groups = parse_object_groups(asa_config_path)
@@ -125,3 +139,6 @@ with open(output_file, 'w') as file:
     file.write(html_output)
 
 print(f"Output written to {output_file}")
+
+# Print sources with attack path 'Yes'
+print_attack_path_sources(remote_mgmt_rules)
