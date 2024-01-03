@@ -22,6 +22,7 @@ def parse_cisco_asa_config(file_path, object_groups):
     remote_mgmt_rules = []
     mgmt_protocols = {
         'RDP': ['3389', 'rdp'],
+        'SMB': ['445', 'smb'],
         'HTTP': ['80', 'http'],
         'FTP': ['21', 'ftp'],
         'HTTPS': ['443', 'https'],
